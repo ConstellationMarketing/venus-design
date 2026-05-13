@@ -1,0 +1,105 @@
+[build]
+  publish = "dist/spa"
+  command = "npm run build:ssg"
+  functions = "vendor/cms-core/netlify/functions"
+
+# --- Security headers for all responses ---
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent clickjacking — allows same-origin iframes (admin preview)
+    X-Frame-Options = "SAMEORIGIN"
+    # Prevent MIME-type sniffing attacks
+    X-Content-Type-Options = "nosniff"
+    # Limit referrer info sent to third parties
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Enforce HTTPS for 1 year
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    # Restrict browser feature access
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(self), payment=()"
+    # Content Security Policy
+    # Note: unsafe-inline is required because the CMS allows admin-injected scripts
+    # via headScripts/footerScripts. Removing it would require a nonce-based approach.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com; frame-src 'self' https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+
+
+[functions]
+  external_node_modules = ["express"]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  force = true
+  from = "/sitemap.xml"
+  status = 200
+  to = "/.netlify/functions/sitemap"
+
+[[redirects]]
+  force = true
+  from = "/sitemap-pages.xml"
+  status = 200
+  to = "/.netlify/functions/sitemap-pages"
+
+[[redirects]]
+  force = true
+  from = "/sitemap-posts.xml"
+  status = 200
+  to = "/.netlify/functions/sitemap-posts"
+
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/api/:splat"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# --- Cache headers for static assets ---
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

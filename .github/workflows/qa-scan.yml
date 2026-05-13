@@ -1,0 +1,90 @@
+name: QA Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      targetUrl:
+        description: 'Target URL for QA scan'
+        required: false
+        default: 'https://designs-jupiter.netlify.app'
+        type: string
+
+jobs:
+  qa-scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Prefetch published URLs from CMS
+        env:
+          QA_BASE_URL: ${{ github.event.inputs.targetUrl || 'https://designs-jupiter.netlify.app' }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: pnpm tsx tools/qa/prefetch-urls.ts
+
+      - name: Run QA Scan
+        env:
+          QA_BASE_URL: ${{ github.event.inputs.targetUrl || 'https://designs-jupiter.netlify.app' }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: pnpm exec playwright test
+        continue-on-error: true
+
+      - name: Prepare QA artifacts
+        if: always()
+        run: |
+          mkdir -p tools/qa/reports
+          cp tools/qa/urls.json tools/qa/reports/urls.json 2>/dev/null || echo "urls.json not found, skipping"
+
+      - name: Upload QA Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-${{ github.sha }}
+          path: tools/qa/reports/
+          retention-days: 30
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-screenshots-${{ github.sha }}
+          path: tools/qa/screenshots/
+          retention-days: 30
+
+      - name: Generate artifact summary
+        if: always()
+        run: |
+          echo "## QA Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run**: [${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Target URL**: ${{ github.event.inputs.targetUrl || 'https://designs-jupiter.netlify.app' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Reports uploaded as artifacts:" >> $GITHUB_STEP_SUMMARY
+          echo "- QA Report: \`qa-report-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Screenshots: \`qa-screenshots-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
