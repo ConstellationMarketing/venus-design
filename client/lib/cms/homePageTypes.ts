@@ -17,11 +17,6 @@ export interface HeroContent {
   phoneLabel: string;
 }
 
-export interface PartnerLogo {
-  src: string;
-  alt: string;
-}
-
 export interface AboutFeature {
   number: string;
   title: string;
@@ -58,9 +53,6 @@ export interface PracticeAreaItem {
 export interface PracticeAreasIntroContent {
   sectionLabel: string;
   heading: string;
-  buttonLink: string;
-  buttonTextLine1: string;
-  buttonTextLine2: string;
 }
 
 export interface AwardsContent {
@@ -144,7 +136,6 @@ export interface ContactContent {
 // Complete homepage content structure
 export interface HomePageContent {
   hero: HeroContent;
-  partnerLogos: PartnerLogo[];
   about: AboutContent;
   practiceAreasIntro: PracticeAreasIntroContent;
   practiceAreas: PracticeAreaItem[];
@@ -175,7 +166,6 @@ export const defaultHomeContent: HomePageContent = {
     phone: "",
     phoneLabel: "",
   },
-  partnerLogos: [],
   about: {
     sectionLabel: "",
     heading: "",
@@ -193,9 +183,6 @@ export const defaultHomeContent: HomePageContent = {
   practiceAreasIntro: {
     sectionLabel: "",
     heading: "",
-    buttonLink: "",
-    buttonTextLine1: "",
-    buttonTextLine2: "",
   },
   practiceAreas: [],
   awards: {

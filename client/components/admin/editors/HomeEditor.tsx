@@ -14,7 +14,6 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
   return (
     <div className="space-y-6">
       <HeroSection content={content} update={update} />
-      <PartnerLogosSection content={content} update={update} />
       <AboutSectionEditor content={content} update={update} />
       <PracticeAreasIntroSection content={content} update={update} />
       <PracticeAreasItemsSection content={content} update={update} />
@@ -131,41 +130,6 @@ function HeroSection({ content, update }: SectionProps) {
 }
 
 /* ------------------------------------------------------------------ */
-function PartnerLogosSection({ content, update }: SectionProps) {
-  return (
-    <Section title="Partner Logos" defaultOpen={false}>
-      <ArrayEditor
-        items={content.partnerLogos}
-        onChange={(items) => update("partnerLogos", items)}
-        itemLabel="Logo"
-        newItem={() => ({ src: "", alt: "" })}
-        renderItem={(item, _, upd) => (
-          <div className="grid gap-3">
-            <ImageField
-              label="Logo Image"
-              value={item.src}
-              onChange={(url) => upd({ ...item, src: url })}
-              altValue={item.alt}
-              onAltChange={(alt) => upd({ ...item, alt })}
-              onSelectAsset={(asset) => upd({
-                ...item,
-                src: asset.url,
-                alt: asset.suggestedAltText || item.alt,
-              })}
-              folder="logos"
-            />
-            <div>
-              <Label>Alt Text</Label>
-              <Input value={item.alt} onChange={(e) => upd({ ...item, alt: e.target.value })} />
-            </div>
-          </div>
-        )}
-      />
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 function AboutSectionEditor({ content, update }: SectionProps) {
   const about = content.about;
   const set = (patch: Partial<typeof about>) => update("about", { ...about, ...patch });
@@ -251,20 +215,6 @@ function PracticeAreasIntroSection({ content, update }: SectionProps) {
         <div>
           <Label>Text</Label>
           <Input value={intro.heading} onChange={(e) => set({ heading: e.target.value })} />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label>Button Text Line 1</Label>
-            <Input value={intro.buttonTextLine1 || ""} onChange={(e) => set({ buttonTextLine1: e.target.value })} placeholder="Discover" />
-          </div>
-          <div>
-            <Label>Button Text Line 2</Label>
-            <Input value={intro.buttonTextLine2 || ""} onChange={(e) => set({ buttonTextLine2: e.target.value })} placeholder="All Practice Areas" />
-          </div>
-        </div>
-        <div>
-          <Label>Button Link</Label>
-          <Input value={intro.buttonLink} onChange={(e) => set({ buttonLink: e.target.value })} placeholder="/practice-areas/" />
         </div>
       </div>
     </Section>

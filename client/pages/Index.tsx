@@ -26,9 +26,7 @@ export default function Index() {
     );
   }
 
-  // Use CMS content for hero and partner logos
   const heroContent = content.hero;
-  const partnerLogos = content.partnerLogos;
 
   return (
     <Layout>
@@ -41,33 +39,6 @@ export default function Index() {
       />
 
       <Hero content={heroContent} />
-
-      {/* Partner Badges Section - Bottom of Hero */}
-      {partnerLogos.length > 0 && (
-        <div className="bg-brand-dark py-[20px] md:py-[30px]">
-          <div className="max-w-[2560px] mx-auto w-[95%]">
-            <div className="bg-brand-card border border-brand-border py-[10px] px-0 flex flex-nowrap justify-center overflow-hidden">
-              {partnerLogos.map((logo, index) => (
-                <div
-                  key={index}
-                  className="px-[8px] sm:px-[15px] md:px-[30px] py-2 flex items-center justify-center flex-shrink"
-                >
-                  <div className="text-center">
-                    <img
-                      src={logo.src}
-                      alt={logo.alt}
-                      className="w-[80px] sm:w-[100px] md:w-[120px] lg:w-[190px] max-w-full inline-block"
-                      width={190}
-                      height={123}
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* About Us Section */}
       <AboutSection content={content.about} headingTag={content.headingTags?.["about.sectionLabel"]} />

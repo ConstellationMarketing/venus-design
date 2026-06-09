@@ -232,7 +232,6 @@ export const DEFAULT_BLOG_SIDEBAR: BlogSidebarData = {
 
 const HOME_CONTENT_KEYS: (keyof HomePageContent)[] = [
   "hero",
-  "partnerLogos",
   "about",
   "practiceAreasIntro",
   "practiceAreas",
@@ -485,7 +484,6 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
 
   return {
     hero: { ...defaults.hero, ...cmsContent.hero },
-    partnerLogos: cmsContent.partnerLogos?.length ? cmsContent.partnerLogos : defaults.partnerLogos,
     about: {
       ...defaults.about,
       ...cmsContent.about,

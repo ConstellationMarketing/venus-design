@@ -1,5 +1,3 @@
-import { Scale } from "lucide-react";
-import { Link } from "react-router-dom";
 import type { PracticeAreasIntroContent } from "@site/lib/cms/homePageTypes";
 
 interface PracticeAreasSectionProps {
@@ -32,29 +30,7 @@ export default function PracticeAreasSection({ content }: PracticeAreasSectionPr
             )}
           </div>
 
-          {/* Right Column - Discover CTA */}
-          {(data.buttonTextLine1 || data.buttonTextLine2) && (
-            <div className="md:w-full flex items-center">
-              <Link
-                to={data.buttonLink || "/practice-areas/"}
-                className="bg-brand-accent p-[8px] w-full max-w-[400px] mx-auto md:mx-auto cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                    <Scale className="w-8 h-8 text-black group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-outfit text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
-                      {data.buttonTextLine1}
-                    </p>
-                    <p className="font-outfit text-[18px] md:text-[24px] text-black leading-none group-hover:text-white transition-colors duration-300">
-                      {data.buttonTextLine2}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          )}
+          <div className="md:w-full" />
         </div>
       </div>
     </div>
