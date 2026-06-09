@@ -20,41 +20,30 @@ interface UseHomeContentResult {
   error: Error | null;
 }
 
-let cachedContent: HomePageContent | null = null;
-let cachedMeta: PageMeta | null = null;
-let cachedTitle = "";
-let cachedPublishedAt: string | null = null;
-let cachedUpdatedAt: string | null = null;
 
 export function useHomeContent(): UseHomeContentResult {
   const injected = consumePageData("/");
   const normalizedInjectedContent = isHomePageContentShape(injected?.content)
     ? normalizeHomePageContent(injected.content)
     : null;
-  const initialContent = normalizedInjectedContent || cachedContent || defaultHomeContent;
-  const initialMeta = normalizedInjectedContent ? (injected?.meta || emptyPageMeta) : (cachedMeta || emptyPageMeta);
-  const initialTitle = normalizedInjectedContent ? (injected?.title || "") : cachedTitle;
-  const initialPublishedAt = normalizedInjectedContent ? (injected?.publishedAt ?? null) : cachedPublishedAt;
-  const initialUpdatedAt = normalizedInjectedContent ? (injected?.updatedAt ?? null) : cachedUpdatedAt;
+  const initialContent = normalizedInjectedContent || defaultHomeContent;
+  const initialMeta = normalizedInjectedContent ? (injected?.meta || emptyPageMeta) : emptyPageMeta;
+  const initialTitle = normalizedInjectedContent ? (injected?.title || "") : "";
+  const initialPublishedAt = normalizedInjectedContent ? (injected?.publishedAt ?? null) : null;
+  const initialUpdatedAt = normalizedInjectedContent ? (injected?.updatedAt ?? null) : null;
 
   const [content, setContent] = useState<HomePageContent>(initialContent);
   const [meta, setMeta] = useState<PageMeta>(initialMeta);
   const [title, setTitle] = useState(initialTitle);
   const [publishedAt, setPublishedAt] = useState<string | null>(initialPublishedAt);
   const [updatedAt, setUpdatedAt] = useState<string | null>(initialUpdatedAt);
-  const [isLoading, setIsLoading] = useState(!normalizedInjectedContent && !cachedContent);
+  const [isLoading, setIsLoading] = useState(!normalizedInjectedContent);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
     if (normalizedInjectedContent) {
-      cachedContent = normalizedInjectedContent;
-      cachedMeta = initialMeta;
-      cachedTitle = initialTitle;
-      cachedPublishedAt = initialPublishedAt;
-      cachedUpdatedAt = initialUpdatedAt;
-
       if (isMounted) {
         setContent(normalizedInjectedContent);
         setMeta(initialMeta);
@@ -72,18 +61,6 @@ export function useHomeContent(): UseHomeContentResult {
 
     async function fetchHomeContent() {
       try {
-        if (cachedContent) {
-          if (isMounted) {
-            setContent(cachedContent);
-            setMeta(cachedMeta || emptyPageMeta);
-            setTitle(cachedTitle);
-            setPublishedAt(cachedPublishedAt);
-            setUpdatedAt(cachedUpdatedAt);
-            setIsLoading(false);
-          }
-          return;
-        }
-
         const document = await loadHomePageDocument();
         if (!document) {
           if (isMounted) {
@@ -97,12 +74,6 @@ export function useHomeContent(): UseHomeContentResult {
         }
 
         const normalizedContent = normalizeHomePageContent(document.content);
-
-        cachedContent = normalizedContent;
-        cachedMeta = document.meta;
-        cachedTitle = document.title;
-        cachedPublishedAt = document.publishedAt;
-        cachedUpdatedAt = document.updatedAt;
 
         if (isMounted) {
           setContent(normalizedContent);
@@ -138,10 +109,4 @@ export function useHomeContent(): UseHomeContentResult {
   return { content, meta, title, publishedAt, updatedAt, isLoading, error };
 }
 
-export function clearHomeContentCache() {
-  cachedContent = null;
-  cachedMeta = null;
-  cachedTitle = "";
-  cachedPublishedAt = null;
-  cachedUpdatedAt = null;
-}
+export function clearHomeContentCache() {}
