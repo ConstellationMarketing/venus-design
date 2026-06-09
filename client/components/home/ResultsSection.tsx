@@ -34,15 +34,15 @@ export default function ResultsSection({ content }: ResultsSectionProps) {
 
                 {item.title.trim() ? (
                   <h3
-                    className="pb-2 text-center text-[clamp(3.75rem,7vw,90px)] leading-[1.1] text-black"
-                    style={{ fontFamily: '"Bebas Neue", cursive' }}
+                    className="whitespace-nowrap pb-2 text-center text-[clamp(3rem,7vw,90px)] leading-[1.1] text-black"
+                    style={{ fontFamily: '"Bebas Neue", cursive', fontWeight: 400 }}
                   >
                     {item.title}
                   </h3>
                 ) : null}
 
                 {item.description.trim() ? (
-                  <p className="text-center text-[24px] leading-8 text-black">
+                  <p className="text-center font-poppins text-[24px] font-normal leading-8 text-black">
                     {item.description}
                   </p>
                 ) : null}
