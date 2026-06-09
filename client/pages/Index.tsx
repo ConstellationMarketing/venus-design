@@ -4,7 +4,7 @@ import Hero from "@site/components/home/Hero";
 import AboutSection from "@site/components/home/AboutSection";
 import PracticeAreasSection from "@site/components/home/PracticeAreasSection";
 import TestimonialsSection from "@site/components/home/TestimonialsSection";
-import ProcessSection from "@site/components/home/ProcessSection";
+import HomeBlogSection from "@site/components/home/HomeBlogSection";
 import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
 import FaqSection from "@site/components/home/FaqSection";
 import ContactUsSection from "@site/components/home/ContactUsSection";
@@ -50,8 +50,8 @@ export default function Index() {
       {/* Testimonials Section */}
       <TestimonialsSection content={content.testimonials} headingTag={content.headingTags?.["testimonials.sectionLabel"]} />
 
-      {/* Process Section */}
-      <ProcessSection content={content.process} headingTags={content.headingTags} />
+      {/* Blog Section */}
+      <HomeBlogSection content={content.blog} headingTag={content.headingTags?.["blog.heading"]} />
 
       {/* Google Reviews Section */}
       <GoogleReviewsSection content={content.googleReviews} headingTag={content.headingTags?.["googleReviews.sectionLabel"]} />

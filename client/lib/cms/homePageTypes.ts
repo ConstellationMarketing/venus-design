@@ -103,6 +103,12 @@ export interface ProcessContent {
   steps: ProcessStep[];
 }
 
+export interface HomeBlogContent {
+  heading: string;
+  buttonLabel: string;
+  buttonLink: string;
+}
+
 export interface GoogleReviewItem {
   text: string;
   author: string;
@@ -153,7 +159,7 @@ export interface HomePageContent {
   practiceAreasIntro: PracticeAreasIntroContent;
   practiceAreas: PracticeAreasGridContent;
   testimonials: TestimonialsContent;
-  process: ProcessContent;
+  blog: HomeBlogContent;
   googleReviews: GoogleReviewsContent;
   faq: FaqContent;
   contact: ContactContent;
@@ -212,11 +218,10 @@ export const defaultHomeContent: HomePageContent = {
     backgroundImageAlt: "",
     items: [],
   },
-  process: {
-    sectionLabel: "",
-    headingLine1: "",
-    headingLine2: "",
-    steps: [],
+  blog: {
+    heading: "",
+    buttonLabel: "Read All",
+    buttonLink: "/blog/",
   },
   googleReviews: {
     sectionLabel: "",

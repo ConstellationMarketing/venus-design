@@ -48,6 +48,9 @@ export async function buildRoutePreload(
     state.page = {
       document: await loadHomePageDocument(),
     };
+    state.blog = {
+      recentPosts: await loadRecentPosts(4),
+    };
     return finalizeRoutePreload(normalizedPath, state);
   }
 

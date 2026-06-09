@@ -236,7 +236,7 @@ const HOME_CONTENT_KEYS: (keyof HomePageContent)[] = [
   "practiceAreasIntro",
   "practiceAreas",
   "testimonials",
-  "process",
+  "blog",
   "googleReviews",
   "faq",
   "contact",
@@ -518,10 +518,9 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
       ...cmsContent.testimonials,
       items: cmsContent.testimonials?.items?.length ? cmsContent.testimonials.items : defaults.testimonials.items,
     },
-    process: {
-      ...defaults.process,
-      ...cmsContent.process,
-      steps: cmsContent.process?.steps?.length ? cmsContent.process.steps : defaults.process.steps,
+    blog: {
+      ...defaults.blog,
+      ...cmsContent.blog,
     },
     googleReviews: {
       ...defaults.googleReviews,

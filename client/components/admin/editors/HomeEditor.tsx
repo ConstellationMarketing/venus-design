@@ -18,7 +18,7 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
       <PracticeAreasIntroSection content={content} update={update} />
       <PracticeAreasItemsSection content={content} update={update} />
       <TestimonialsSection content={content} update={update} />
-      <ProcessSection content={content} update={update} />
+      <BlogSectionEditor content={content} update={update} />
       <GoogleReviewsSection content={content} update={update} />
       <FaqSectionEditor content={content} update={update} />
       <ContactSectionEditor content={content} update={update} />
@@ -409,50 +409,31 @@ function TestimonialsSection({ content, update }: SectionProps) {
 }
 
 /* ------------------------------------------------------------------ */
-function ProcessSection({ content, update }: SectionProps) {
-  const p = content.process;
-  const set = (patch: Partial<typeof p>) => update("process", { ...p, ...patch });
+function BlogSectionEditor({ content, update }: SectionProps) {
+  const blog = content.blog;
+  const set = (patch: Partial<typeof blog>) => update("blog", { ...blog, ...patch });
   const ht = useHeadingTag(content, update);
 
   return (
-    <Section title="Process Steps" defaultOpen={false}>
+    <Section title="Blog Section" defaultOpen={false}>
       <div className="grid gap-4">
         <HeadingField
           label="Section Heading"
-          value={p.sectionLabel}
-          onChange={(v) => set({ sectionLabel: v })}
-          tag={ht.get("process.sectionLabel")}
-          onTagChange={(t) => ht.set("process.sectionLabel", t)}
+          value={blog.heading}
+          onChange={(v) => set({ heading: v })}
+          tag={ht.get("blog.heading")}
+          onTagChange={(t) => ht.set("blog.heading", t)}
         />
-        <div>
-          <Label>Subtitle Line 1</Label>
-          <Input value={p.headingLine1} onChange={(e) => set({ headingLine1: e.target.value })} />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <Label>Button Label</Label>
+            <Input value={blog.buttonLabel} onChange={(e) => set({ buttonLabel: e.target.value })} placeholder="Read All" />
+          </div>
+          <div>
+            <Label>Button Link</Label>
+            <Input value={blog.buttonLink} onChange={(e) => set({ buttonLink: e.target.value })} placeholder="/blog/" />
+          </div>
         </div>
-        <div>
-          <Label>Subtitle Line 2</Label>
-          <Input value={p.headingLine2} onChange={(e) => set({ headingLine2: e.target.value })} />
-        </div>
-        <ArrayEditor
-          items={p.steps}
-          onChange={(items) => set({ steps: items })}
-          itemLabel="Step"
-          newItem={() => ({ number: "", title: "", description: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <div className="grid grid-cols-4 gap-3">
-                <div>
-                  <Label>Number</Label>
-                  <Input value={item.number} onChange={(e) => upd({ ...item, number: e.target.value })} />
-                </div>
-                <div className="col-span-3">
-                  <Label>Title</Label>
-                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
-                </div>
-              </div>
-              <RichTextField label="Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
-            </div>
-          )}
-        />
       </div>
     </Section>
   );
