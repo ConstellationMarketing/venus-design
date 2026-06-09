@@ -21,6 +21,8 @@ export default {
           "serif",
         ],
         outfit: ["Outfit", "Helvetica", "Arial", "Lucida", "sans-serif"],
+        poppins: ["Poppins", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        sawarabi: ['"Sawarabi Mincho"', '"Times New Roman"', "serif"],
       },
       colors: {
         // TEMPLATE: Update brand colors for each new project
