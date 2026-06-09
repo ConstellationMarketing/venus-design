@@ -51,6 +51,9 @@ const PRACTICE_AREA_ICON_OPTIONS = [
   { value: "Plane", label: "Plane" },
   { value: "Diamond", label: "Diamond" },
   { value: "User", label: "User" },
+  { value: "Weight", label: "Weight" },
+  { value: "Gavel", label: "Gavel" },
+  { value: "Columns", label: "Columns" },
 ];
 
 function useHeadingTag(content: HomePageContent, update: Updater) {

@@ -18,6 +18,9 @@ import {
   Plane,
   Diamond,
   User,
+  Weight,
+  Gavel,
+  Columns,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react";
@@ -48,6 +51,9 @@ const iconMap: Record<string, LucideIcon> = {
   Plane,
   Diamond,
   User,
+  Weight,
+  Gavel,
+  Columns,
 };
 
 function normalizeIconKey(value: string) {
@@ -97,6 +103,9 @@ const iconAliases: Record<string, keyof typeof iconMap> = {
   diamond: "Diamond",
   user: "User",
   person: "User",
+  weight: "Weight",
+  gavel: "Gavel",
+  columns: "Columns",
 };
 
 function resolvePracticeAreaIcon(iconName: string): LucideIcon {
