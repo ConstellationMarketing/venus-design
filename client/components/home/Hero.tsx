@@ -52,7 +52,9 @@ export default function Hero({ content }: HeroProps) {
   const primaryCtaLabel = content.primaryCtaLabel.trim() || "Contact Us";
   const primaryCtaUrl = content.primaryCtaUrl.trim() || "/contact/";
   const secondaryCtaLabel = content.secondaryCtaLabel.trim() || "Call Us Now";
-  const hasAnyImage = Boolean(content.primaryImage || content.secondaryImage);
+  const hasPrimaryImage = Boolean(content.primaryImage);
+  const hasSecondaryImage = Boolean(content.secondaryImage);
+  const hasAnyImage = hasPrimaryImage || hasSecondaryImage;
 
   return (
     <section className="bg-white pb-8 font-poppins text-black">
@@ -120,12 +122,12 @@ export default function Hero({ content }: HeroProps) {
 
           {hasAnyImage ? (
             <div className="flex justify-center lg:justify-end">
-              <div className="grid w-full max-w-[660px] gap-6">
+              <div className={`grid w-full max-w-[660px] gap-4 ${hasPrimaryImage && hasSecondaryImage ? "grid-cols-2" : "grid-cols-1"}`}>
                 {content.primaryImage ? (
                   <img
                     src={content.primaryImage}
                     alt={content.primaryImageAlt || content.h1Title || "Homepage hero image"}
-                    className="w-full max-w-full object-cover align-middle"
+                    className="h-full w-full max-w-full object-cover align-middle"
                     loading="eager"
                   />
                 ) : null}
@@ -133,7 +135,7 @@ export default function Hero({ content }: HeroProps) {
                   <img
                     src={content.secondaryImage}
                     alt={content.secondaryImageAlt || content.h1Title || "Homepage hero image"}
-                    className="w-full max-w-full object-cover align-middle"
+                    className="h-full w-full max-w-full object-cover align-middle"
                     loading="eager"
                   />
                 ) : null}
