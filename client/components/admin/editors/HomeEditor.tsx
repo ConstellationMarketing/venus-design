@@ -31,6 +31,28 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
 type Updater = <K extends keyof HomePageContent>(key: K, value: HomePageContent[K]) => void;
 type SectionProps = { content: HomePageContent; update: Updater };
 
+const PRACTICE_AREA_ICON_OPTIONS = [
+  { value: "Car", label: "Car" },
+  { value: "Truck", label: "Truck" },
+  { value: "Bike", label: "Bike" },
+  { value: "Footprints", label: "Footprints" },
+  { value: "AlertTriangle", label: "Alert Triangle" },
+  { value: "Building", label: "Building" },
+  { value: "FileText", label: "File Text" },
+  { value: "Scale", label: "Scale" },
+  { value: "Briefcase", label: "Briefcase" },
+  { value: "Users", label: "Users" },
+  { value: "Home", label: "Home" },
+  { value: "DollarSign", label: "Dollar Sign" },
+  { value: "Heart", label: "Heart" },
+  { value: "Shield", label: "Shield" },
+  { value: "TrendingUp", label: "Trending Up" },
+  { value: "Stethoscope", label: "Stethoscope" },
+  { value: "Plane", label: "Plane" },
+  { value: "Diamond", label: "Diamond" },
+  { value: "User", label: "User" },
+];
+
 function useHeadingTag(content: HomePageContent, update: Updater) {
   return {
     get: (key: string) => content.headingTags?.[key] ?? "h2",
@@ -266,25 +288,41 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
           items={grid.items}
           onChange={(items) => set({ items })}
           itemLabel="Practice Area"
-          newItem={() => ({ icon: "Scale", title: "", link: "/practice-areas/" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <div className="grid grid-cols-4 gap-3">
+          newItem={() => ({ icon: "Car", title: "", link: "/practice-areas/" })}
+          renderItem={(item, _, upd) => {
+            const hasCustomIcon = Boolean(item.icon) && !PRACTICE_AREA_ICON_OPTIONS.some((option) => option.value === item.icon);
+
+            return (
+              <div className="grid gap-3">
+                <div className="grid grid-cols-4 gap-3">
+                  <div>
+                    <Label>Icon</Label>
+                    <select
+                      value={item.icon || "Car"}
+                      onChange={(e) => upd({ ...item, icon: e.target.value })}
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                      title="Practice area icon"
+                    >
+                      {hasCustomIcon ? <option value={item.icon}>{item.icon} (current)</option> : null}
+                      {PRACTICE_AREA_ICON_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-span-3">
+                    <Label>Title</Label>
+                    <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
+                  </div>
+                </div>
                 <div>
-                  <Label>Icon</Label>
-                  <Input value={item.icon} onChange={(e) => upd({ ...item, icon: e.target.value })} placeholder="Lucide icon name" />
-                </div>
-                <div className="col-span-3">
-                  <Label>Title</Label>
-                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
+                  <Label>Link</Label>
+                  <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} />
                 </div>
               </div>
-              <div>
-                <Label>Link</Label>
-                <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} />
-              </div>
-            </div>
-          )}
+            );
+          }}
         />
         <div className="grid gap-4 md:grid-cols-2">
           <div>

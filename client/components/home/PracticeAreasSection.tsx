@@ -50,6 +50,108 @@ const iconMap: Record<string, LucideIcon> = {
   User,
 };
 
+const defaultPracticeAreaIcons: LucideIcon[] = [Car, Truck, Bike, Footprints];
+
+function normalizeIconKey(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+const iconAliases: Record<string, keyof typeof iconMap> = {
+  car: "Car",
+  auto: "Car",
+  vehicle: "Car",
+  truck: "Truck",
+  bike: "Bike",
+  bicycle: "Bike",
+  motorcycle: "Bike",
+  pedestrian: "Footprints",
+  walk: "Footprints",
+  footprints: "Footprints",
+  warning: "AlertTriangle",
+  alert: "AlertTriangle",
+  alerttriangle: "AlertTriangle",
+  building: "Building",
+  property: "Building",
+  file: "FileText",
+  filetext: "FileText",
+  document: "FileText",
+  text: "FileText",
+  scale: "Scale",
+  scales: "Scale",
+  briefcase: "Briefcase",
+  business: "Briefcase",
+  users: "Users",
+  people: "Users",
+  home: "Home",
+  house: "Home",
+  money: "DollarSign",
+  dollarsign: "DollarSign",
+  heart: "Heart",
+  shield: "Shield",
+  trending: "TrendingUp",
+  trendingup: "TrendingUp",
+  chart: "TrendingUp",
+  medical: "Stethoscope",
+  doctor: "Stethoscope",
+  stethoscope: "Stethoscope",
+  plane: "Plane",
+  airplane: "Plane",
+  diamond: "Diamond",
+  user: "User",
+  person: "User",
+};
+
+function resolvePracticeAreaIcon(iconName: string, title: string, index: number): LucideIcon {
+  const directMatch = iconMap[iconName];
+
+  if (directMatch) {
+    return directMatch;
+  }
+
+  const normalizedIcon = normalizeIconKey(iconName);
+  const aliasedIcon = normalizedIcon ? iconAliases[normalizedIcon] : undefined;
+
+  if (aliasedIcon) {
+    return iconMap[aliasedIcon];
+  }
+
+  const lowerTitle = title.toLowerCase();
+
+  if (/(car|auto|vehicle)/.test(lowerTitle)) {
+    return Car;
+  }
+
+  if (/truck/.test(lowerTitle)) {
+    return Truck;
+  }
+
+  if (/(motorcycle|bike|bicycle)/.test(lowerTitle)) {
+    return Bike;
+  }
+
+  if (/(pedestrian|walk|foot)/.test(lowerTitle)) {
+    return Footprints;
+  }
+
+  if (/(medical|doctor|malpractice|hospital)/.test(lowerTitle)) {
+    return Stethoscope;
+  }
+
+  if (/(business|employment|work|job)/.test(lowerTitle)) {
+    return Briefcase;
+  }
+
+  if (/(estate|probate|family|child|custody)/.test(lowerTitle)) {
+    return Users;
+  }
+
+  if (/(property|real estate|premises|building)/.test(lowerTitle)) {
+    return Building;
+  }
+
+  return defaultPracticeAreaIcons[index % defaultPracticeAreaIcons.length] || Scale;
+}
+
 interface PracticeAreasSectionProps {
   intro?: PracticeAreasIntroContent;
   grid?: PracticeAreasGridContent;
@@ -106,7 +208,7 @@ export default function PracticeAreasSection({
 
             <div>
               {areaItems.map((area, index) => {
-                const Icon = iconMap[area.icon] || Scale;
+                const Icon = resolvePracticeAreaIcon(area.icon, area.title, index);
 
                 return (
                   <SiteLink
