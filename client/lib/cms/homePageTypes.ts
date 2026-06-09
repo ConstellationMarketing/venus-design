@@ -43,8 +43,9 @@ export interface AboutContent {
   contactText: string;
   attorneyImage: string;
   attorneyImageAlt: string;
-  features: AboutFeature[];
-  stats: AboutStat[];
+  ctaTitle: string;
+  ctaButtonLabel: string;
+  ctaButtonLink: string;
 }
 
 export interface PracticeAreaItem {
@@ -185,8 +186,9 @@ export const defaultHomeContent: HomePageContent = {
     contactText: "",
     attorneyImage: "",
     attorneyImageAlt: "",
-    features: [],
-    stats: [],
+    ctaTitle: "",
+    ctaButtonLabel: "",
+    ctaButtonLink: "",
   },
   practiceAreasIntro: {
     sectionLabel: "",

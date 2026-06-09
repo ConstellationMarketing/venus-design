@@ -187,14 +187,14 @@ function AboutSectionEditor({ content, update }: SectionProps) {
         </div>
         <RichTextField label="Description" value={about.description} onChange={(v) => set({ description: v })} />
         <p className="text-xs text-gray-500 italic">Phone number is managed in Site Settings &gt; Contact Info</p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <Label>Contact Label</Label>
-            <Input value={about.contactLabel} onChange={(e) => set({ contactLabel: e.target.value })} />
+            <Label>Contact Button Label</Label>
+            <Input value={about.contactLabel} onChange={(e) => set({ contactLabel: e.target.value })} placeholder="Contact Us Today" />
           </div>
           <div>
-            <Label>Contact Text</Label>
-            <Input value={about.contactText} onChange={(e) => set({ contactText: e.target.value })} />
+            <Label>Contact Button Link</Label>
+            <Input value={about.contactText} onChange={(e) => set({ contactText: e.target.value })} placeholder="/contact/" />
           </div>
         </div>
         <ImageField
@@ -213,49 +213,20 @@ function AboutSectionEditor({ content, update }: SectionProps) {
           <Label>Attorney Image Alt</Label>
           <Input value={about.attorneyImageAlt} onChange={(e) => set({ attorneyImageAlt: e.target.value })} />
         </div>
-
-        <h4 className="font-medium mt-2">Features</h4>
-        <ArrayEditor
-          items={about.features}
-          onChange={(items) => set({ features: items })}
-          itemLabel="Feature"
-          newItem={() => ({ number: String(about.features.length + 1), title: "", description: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <div className="grid grid-cols-4 gap-3">
-                <div>
-                  <Label>Number</Label>
-                  <Input value={item.number} onChange={(e) => upd({ ...item, number: e.target.value })} />
-                </div>
-                <div className="col-span-3">
-                  <Label>Title</Label>
-                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
-                </div>
-              </div>
-              <RichTextField label="Description" value={item.description} onChange={(v) => upd({ ...item, description: v })} />
-            </div>
-          )}
-        />
-
-        <h4 className="font-medium mt-2">Stats</h4>
-        <ArrayEditor
-          items={about.stats}
-          onChange={(items) => set({ stats: items })}
-          itemLabel="Stat"
-          newItem={() => ({ value: "", label: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Value</Label>
-                <Input value={item.value} onChange={(e) => upd({ ...item, value: e.target.value })} />
-              </div>
-              <div>
-                <Label>Label</Label>
-                <Input value={item.label} onChange={(e) => upd({ ...item, label: e.target.value })} />
-              </div>
-            </div>
-          )}
-        />
+        <div>
+          <Label>CTA Banner Title</Label>
+          <Input value={about.ctaTitle} onChange={(e) => set({ ctaTitle: e.target.value })} placeholder="Talk to an attorney today" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <Label>CTA Banner Button Label</Label>
+            <Input value={about.ctaButtonLabel} onChange={(e) => set({ ctaButtonLabel: e.target.value })} placeholder="Get started" />
+          </div>
+          <div>
+            <Label>CTA Banner Button Link</Label>
+            <Input value={about.ctaButtonLink} onChange={(e) => set({ ctaButtonLink: e.target.value })} placeholder="/contact/" />
+          </div>
+        </div>
       </div>
     </Section>
   );

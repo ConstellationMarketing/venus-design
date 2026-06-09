@@ -1,163 +1,144 @@
-import { Phone, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ChevronDown, User } from "lucide-react";
 import type { AboutContent } from "@site/lib/cms/homePageTypes";
-import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
 import RichText from "@site/components/shared/RichText";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
+import SiteLink from "@site/components/layout/SiteLink";
 
 interface AboutSectionProps {
   content?: AboutContent;
   headingTag?: string;
 }
 
+function splitHeadingLines(value: string) {
+  return value
+    .split(/\n/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function ButtonWithArrow({
+  href,
+  label,
+  colors,
+}: {
+  href: string;
+  label: string;
+  colors: {
+    body: string;
+    bodyHover: string;
+    arrow: string;
+    arrowHover: string;
+  };
+}) {
+  return (
+    <SiteLink href={href} className="group inline-flex overflow-hidden text-[18px] leading-7 text-white">
+      <span className={`flex items-center px-8 py-3 transition-colors duration-300 ${colors.body} ${colors.bodyHover}`}>
+        {label}
+      </span>
+      <span className={`flex items-center justify-center px-4 py-3 transition-colors duration-300 ${colors.arrow} ${colors.arrowHover}`}>
+        <ChevronDown className="h-5 w-5" />
+      </span>
+    </SiteLink>
+  );
+}
+
 export default function AboutSection({ content, headingTag }: AboutSectionProps) {
-  // Guard: if no meaningful content, don't render
-  if (!content || (!content.heading && !content.description)) {
+  if (!content || (!content.heading && !content.description && !content.attorneyImage)) {
     return null;
   }
 
   const data = content;
-  const features = data.features || [];
-  const stats = data.stats || [];
-  const { phoneNumber, phoneLabel, phoneDisplay } = useGlobalPhone();
+  const headingLines = splitHeadingLines(data.heading);
+  const contactLabel = data.contactLabel.trim() || "Contact Us Today";
+  const contactHref = data.contactText.trim() || "/contact/";
+  const bannerTitle = data.ctaTitle.trim();
+  const bannerButtonLabel = data.ctaButtonLabel.trim() || "Get started";
+  const bannerButtonHref = data.ctaButtonLink.trim() || "/contact/";
 
   return (
-    <div className="bg-white pt-[30px] md:pt-[54px]">
-      {/* Main Content Section */}
-      <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] pt-[20px] md:pt-[27px]">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-[5.5%]">
-          {/* Left Column - About Text and CTAs */}
-          <div className="md:w-full">
-            {/* About Us Label */}
-            {data.sectionLabel && (
-              <DynamicHeading
-                tag={headingTag}
-                defaultTag="h2"
-                className="text-[rgb(107,141,12)] font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px] mb-[10px]"
-              >
-                {data.sectionLabel}
-              </DynamicHeading>
-            )}
+    <section className="bg-white font-poppins text-black">
+      <div className="mx-auto w-[90%] max-w-[2560px] px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div
+            className="min-h-[350px] bg-cover bg-center bg-no-repeat"
+            style={data.attorneyImage ? { backgroundImage: `url(${data.attorneyImage})` } : undefined}
+            aria-label={data.attorneyImageAlt || "Attorney image"}
+            role={data.attorneyImage ? "img" : undefined}
+          />
 
-            {/* Subtitle */}
-            <div className="mb-[20px] md:mb-[9.27%]">
-              {data.heading && (
-                <p className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black pb-[10px]">
-                  {data.heading}
-                </p>
-              )}
-              {data.description && (
+          <div className="bg-[#aecdff] px-8 py-10 md:px-12 md:py-12">
+            {data.sectionLabel ? (
+              <div className="mb-8">
+                <DynamicHeading
+                  tag={headingTag}
+                  defaultTag="h2"
+                  className="inline-flex items-center gap-3 bg-white px-8 py-2 text-[20px] leading-8 text-black md:text-[24px] md:leading-8"
+                >
+                  <User className="h-5 w-5 md:h-6 md:w-6" />
+                  {data.sectionLabel}
+                </DynamicHeading>
+              </div>
+            ) : null}
+
+            {headingLines.length > 0 ? (
+              <div className="mb-8">
+                <h3 className="font-sawarabi text-[clamp(2.5rem,5vw,60px)] leading-[1.1] text-black">
+                  {headingLines.map((line, index) => (
+                    <span key={`${line}-${index}`} className="block pb-2 last:pb-0">
+                      {line}
+                    </span>
+                  ))}
+                </h3>
+              </div>
+            ) : null}
+
+            {data.description ? (
+              <div className="mb-10">
                 <RichText
                   html={data.description}
-                  className="font-outfit text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-black"
+                  className="text-[20px] leading-8 text-black md:text-[24px] md:leading-8 [&_p]:mb-0"
                 />
-              )}
-            </div>
-
-            {/* Call Us 24/7 Box */}
-            <a href={`tel:${phoneNumber.replace(/\D/g, "")}`}>
-              <div className="bg-brand-accent p-[8px] w-full max-w-[400px] mb-[9.27%] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group">
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                    <Phone
-                      className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
-                      strokeWidth={1.5}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-outfit text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
-                      {phoneLabel}
-                    </p>
-                    <p className="font-outfit text-[28px] md:text-[40px] text-black leading-none group-hover:text-white transition-colors duration-300">
-                      {phoneDisplay}
-                    </p>
-                  </div>
-                </div>
               </div>
-            </a>
+            ) : null}
 
-            {/* Contact Us Box */}
-            {data.contactLabel && (
-              <Link to="/contact/" className="bg-brand-accent p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block">
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                    <MessageCircle
-                      className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
-                      strokeWidth={1.5}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-outfit text-[16px] md:text-[18px] leading-tight text-black pb-[10px] group-hover:text-white transition-colors duration-300">
-                      {data.contactLabel}
-                    </p>
-                    <p className="font-outfit text-[18px] md:text-[24px] text-black leading-none group-hover:text-white transition-colors duration-300">
-                      {data.contactText}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            )}
+            <ButtonWithArrow
+              href={contactHref}
+              label={contactLabel}
+              colors={{
+                body: "bg-[#002664]",
+                bodyHover: "group-hover:bg-[#001333]",
+                arrow: "bg-[#001333]",
+                arrowHover: "group-hover:bg-[#000d24]",
+              }}
+            />
           </div>
-
-          {/* Middle Column - Image */}
-          {data.attorneyImage && (
-            <div className="md:w-full flex justify-center md:justify-start">
-              <img
-                src={data.attorneyImage}
-                alt={data.attorneyImageAlt}
-                className="max-w-full w-auto h-auto object-contain"
-                width={462}
-                height={631}
-                loading="lazy"
-              />
-            </div>
-          )}
-
-          {/* Right Column - Features */}
-          {features.length > 0 && (
-            <div className="md:w-full space-y-[20px] md:space-y-[30px]">
-              {features.map((feature, index) => (
-                <div key={index}>
-                  <div className="mb-[20px] md:mb-[30px]">
-                    <h3 className="font-outfit text-[22px] md:text-[28px] leading-tight md:leading-[28px] text-black pb-[10px]">
-                      {feature.number}. {feature.title}
-                    </h3>
-                    <RichText
-                      html={feature.description}
-                      className="font-outfit text-[16px] md:text-[20px] leading-[24px] md:leading-[30px] text-black"
-                    />
-                  </div>
-                  {index < features.length - 1 && (
-                    <div className="h-[23px]">
-                      <div className="inline-block w-full"></div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Stats Section */}
-      {stats.length > 0 && (
-        <div className="max-w-[2560px] mx-auto w-[95%] md:w-[90%] py-[20px] md:py-[27px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-[3%]">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="max-w-[550px] mx-auto">
-                  <h4 className="font-[Crimson_Pro,Georgia,Times_New_Roman,serif] text-[40px] md:text-[60px] leading-tight md:leading-[60px] text-black pb-[10px]">
-                    {stat.value}
-                  </h4>
-                  <div className="font-outfit text-[16px] md:text-[20px] font-light text-black text-center">
-                    {stat.label}
-                  </div>
-                </div>
+      {(bannerTitle || data.ctaButtonLabel || data.ctaButtonLink) ? (
+        <div className="mx-auto w-[90%] max-w-[2560px] px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="bg-[#ff8aa8] px-8 py-8 md:px-8 md:py-8">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <span className="text-[20px] leading-8 text-black md:text-[24px] md:leading-8">
+                  {bannerTitle}
+                </span>
+                <ButtonWithArrow
+                  href={bannerButtonHref}
+                  label={bannerButtonLabel}
+                  colors={{
+                    body: "bg-[#e6446d]",
+                    bodyHover: "group-hover:bg-[#d13963]",
+                    arrow: "bg-[#d13963]",
+                    arrowHover: "group-hover:bg-[#bb133e]",
+                  }}
+                />
               </div>
-            ))}
+            </div>
+            <div />
           </div>
         </div>
-      )}
-    </div>
+      ) : null}
+    </section>
   );
 }
