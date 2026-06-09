@@ -34,8 +34,8 @@ export default function ResultsSection({ content }: ResultsSectionProps) {
 
                 {item.title.trim() ? (
                   <h3
-                    className="whitespace-nowrap pb-2 text-center text-[clamp(3rem,7vw,90px)] leading-[1.1] text-black"
-                    style={{ fontFamily: '"Bebas Neue", cursive', fontWeight: 400 }}
+                    className="w-full overflow-hidden whitespace-nowrap pb-2 text-center text-[clamp(3rem,6vw,90px)] leading-[1.1] text-black [overflow-wrap:normal] [word-break:normal]"
+                    style={{ fontFamily: '"Bebas Neue", sans-serif', fontWeight: 400 }}
                   >
                     {item.title}
                   </h3>
