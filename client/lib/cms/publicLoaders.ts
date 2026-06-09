@@ -482,6 +482,26 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
     return defaults;
   }
 
+  const introFeatures = Array.isArray(cmsContent.practiceAreasIntro?.features)
+    ? defaults.practiceAreasIntro.features.map((feature, index) => ({
+        ...feature,
+        ...cmsContent.practiceAreasIntro?.features?.[index],
+      }))
+    : defaults.practiceAreasIntro.features;
+
+  const practiceAreasGrid = Array.isArray(cmsContent.practiceAreas)
+    ? {
+        ...defaults.practiceAreas,
+        items: cmsContent.practiceAreas,
+      }
+    : {
+        ...defaults.practiceAreas,
+        ...cmsContent.practiceAreas,
+        items: cmsContent.practiceAreas?.items?.length
+          ? cmsContent.practiceAreas.items
+          : defaults.practiceAreas.items,
+      };
+
   return {
     hero: { ...defaults.hero, ...cmsContent.hero },
     about: {
@@ -491,8 +511,9 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
     practiceAreasIntro: {
       ...defaults.practiceAreasIntro,
       ...cmsContent.practiceAreasIntro,
+      features: introFeatures,
     },
-    practiceAreas: cmsContent.practiceAreas?.length ? cmsContent.practiceAreas : defaults.practiceAreas,
+    practiceAreas: practiceAreasGrid,
     awards: {
       ...defaults.awards,
       ...cmsContent.awards,

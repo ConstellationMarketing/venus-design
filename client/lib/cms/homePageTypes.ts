@@ -43,16 +43,28 @@ export interface AboutContent {
   ctaButtonLink: string;
 }
 
-export interface PracticeAreaItem {
-  title: string;
+export interface PracticeAreasIntroFeature {
   image: string;
   imageAlt: string;
+  title: string;
+}
+
+export interface PracticeAreaItem {
+  icon: string;
+  title: string;
   link: string;
 }
 
 export interface PracticeAreasIntroContent {
   sectionLabel: string;
   heading: string;
+  features: PracticeAreasIntroFeature[];
+}
+
+export interface PracticeAreasGridContent {
+  items: PracticeAreaItem[];
+  ctaLabel: string;
+  ctaLink: string;
 }
 
 export interface AwardsContent {
@@ -138,7 +150,7 @@ export interface HomePageContent {
   hero: HeroContent;
   about: AboutContent;
   practiceAreasIntro: PracticeAreasIntroContent;
-  practiceAreas: PracticeAreaItem[];
+  practiceAreas: PracticeAreasGridContent;
   awards: AwardsContent;
   testimonials: TestimonialsContent;
   process: ProcessContent;
@@ -183,8 +195,13 @@ export const defaultHomeContent: HomePageContent = {
   practiceAreasIntro: {
     sectionLabel: "",
     heading: "",
+    features: Array.from({ length: 4 }, () => ({ image: "", imageAlt: "", title: "" })),
   },
-  practiceAreas: [],
+  practiceAreas: {
+    items: [],
+    ctaLabel: "",
+    ctaLink: "",
+  },
   awards: {
     sectionLabel: "",
     heading: "",

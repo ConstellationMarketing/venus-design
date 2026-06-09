@@ -201,6 +201,13 @@ function PracticeAreasIntroSection({ content, update }: SectionProps) {
   const intro = content.practiceAreasIntro;
   const set = (patch: Partial<typeof intro>) => update("practiceAreasIntro", { ...intro, ...patch });
   const ht = useHeadingTag(content, update);
+  const features = Array.from({ length: 4 }, (_, index) => intro.features?.[index] ?? { image: "", imageAlt: "", title: "" });
+
+  const updateFeature = (index: number, patch: Partial<(typeof features)[number]>) => {
+    const next = [...features];
+    next[index] = { ...next[index], ...patch };
+    set({ features: next });
+  };
 
   return (
     <Section title="Practice Areas Intro" defaultOpen={false}>
@@ -214,8 +221,34 @@ function PracticeAreasIntroSection({ content, update }: SectionProps) {
         />
         <div>
           <Label>Text</Label>
-          <Input value={intro.heading} onChange={(e) => set({ heading: e.target.value })} />
+          <Textarea value={intro.heading} onChange={(e) => set({ heading: e.target.value })} />
         </div>
+        {features.map((feature, index) => (
+          <div key={index} className="rounded-lg border bg-gray-50 p-4">
+            <h4 className="mb-3 font-medium">Feature {index + 1}</h4>
+            <div className="grid gap-4">
+              <ImageField
+                label="Feature Image"
+                value={feature.image}
+                onChange={(url) => updateFeature(index, { image: url })}
+                altValue={feature.imageAlt}
+                onAltChange={(imageAlt) => updateFeature(index, { imageAlt })}
+                onSelectAsset={(asset) => updateFeature(index, {
+                  image: asset.url,
+                  imageAlt: asset.suggestedAltText || feature.imageAlt,
+                })}
+                folder="practice-areas"
+              />
+              <HeadingField
+                label="Feature Title"
+                value={feature.title}
+                onChange={(value) => updateFeature(index, { title: value })}
+                tag={content.headingTags?.[`practiceAreasIntro.features.${index}.title`] ?? "h3"}
+                onTagChange={(tag) => ht.set(`practiceAreasIntro.features.${index}.title`, tag)}
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </Section>
   );
@@ -223,43 +256,47 @@ function PracticeAreasIntroSection({ content, update }: SectionProps) {
 
 /* ------------------------------------------------------------------ */
 function PracticeAreasItemsSection({ content, update }: SectionProps) {
+  const grid = content.practiceAreas;
+  const set = (patch: Partial<typeof grid>) => update("practiceAreas", { ...grid, ...patch });
+
   return (
     <Section title="Practice Areas Grid" defaultOpen={false}>
-      <ArrayEditor
-        items={content.practiceAreas}
-        onChange={(items) => update("practiceAreas", items)}
-        itemLabel="Practice Area"
-        newItem={() => ({ title: "", image: "", imageAlt: "", link: "/practice-areas" })}
-        renderItem={(item, _, upd) => (
-          <div className="grid gap-3">
-            <div>
-              <Label>Title</Label>
-              <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
+      <div className="grid gap-4">
+        <ArrayEditor
+          items={grid.items}
+          onChange={(items) => set({ items })}
+          itemLabel="Practice Area"
+          newItem={() => ({ icon: "Scale", title: "", link: "/practice-areas/" })}
+          renderItem={(item, _, upd) => (
+            <div className="grid gap-3">
+              <div className="grid grid-cols-4 gap-3">
+                <div>
+                  <Label>Icon</Label>
+                  <Input value={item.icon} onChange={(e) => upd({ ...item, icon: e.target.value })} placeholder="Lucide icon name" />
+                </div>
+                <div className="col-span-3">
+                  <Label>Title</Label>
+                  <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} />
+                </div>
+              </div>
+              <div>
+                <Label>Link</Label>
+                <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} />
+              </div>
             </div>
-            <ImageField
-              label="Image"
-              value={item.image}
-              onChange={(url) => upd({ ...item, image: url })}
-              altValue={item.imageAlt}
-              onAltChange={(imageAlt) => upd({ ...item, imageAlt })}
-              onSelectAsset={(asset) => upd({
-                ...item,
-                image: asset.url,
-                imageAlt: asset.suggestedAltText || item.imageAlt,
-              })}
-              folder="practice-areas"
-            />
-            <div>
-              <Label>Image Alt Text</Label>
-              <Input value={item.imageAlt} onChange={(e) => upd({ ...item, imageAlt: e.target.value })} placeholder="Describe the image" />
-            </div>
-            <div>
-              <Label>Link</Label>
-              <Input value={item.link} onChange={(e) => upd({ ...item, link: e.target.value })} />
-            </div>
+          )}
+        />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <Label>CTA Button Label</Label>
+            <Input value={grid.ctaLabel} onChange={(e) => set({ ctaLabel: e.target.value })} placeholder="View All Practice Areas" />
           </div>
-        )}
-      />
+          <div>
+            <Label>CTA Button Link</Label>
+            <Input value={grid.ctaLink} onChange={(e) => set({ ctaLink: e.target.value })} placeholder="/practice-areas/" />
+          </div>
+        </div>
+      </div>
     </Section>
   );
 }
