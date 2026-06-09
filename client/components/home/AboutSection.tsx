@@ -66,7 +66,7 @@ export default function AboutSection({ content, headingTag }: AboutSectionProps)
             role={data.attorneyImage ? "img" : undefined}
           />
 
-          <div className="bg-[#aecdff] px-8 py-10 md:px-12 md:py-12">
+          <div className="bg-[#aecdff] px-8 pb-10 pt-14 md:px-12 md:pb-12 md:pt-16">
             {data.sectionLabel ? (
               <div className="mb-8">
                 <DynamicHeading
