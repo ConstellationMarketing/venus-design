@@ -77,13 +77,14 @@ export interface AwardsContent {
 export interface TestimonialItem {
   text: string;
   author: string;
-  ratingImage: string;
-  ratingImageAlt?: string;
 }
 
 export interface TestimonialsContent {
   sectionLabel: string;
   heading: string;
+  description: string;
+  buttonLabel: string;
+  buttonLink: string;
   backgroundImage: string;
   backgroundImageAlt?: string;
   items: TestimonialItem[];
@@ -151,7 +152,6 @@ export interface HomePageContent {
   about: AboutContent;
   practiceAreasIntro: PracticeAreasIntroContent;
   practiceAreas: PracticeAreasGridContent;
-  awards: AwardsContent;
   testimonials: TestimonialsContent;
   process: ProcessContent;
   googleReviews: GoogleReviewsContent;
@@ -202,15 +202,12 @@ export const defaultHomeContent: HomePageContent = {
     ctaLabel: "",
     ctaLink: "",
   },
-  awards: {
-    sectionLabel: "",
-    heading: "",
-    description: "",
-    logos: [],
-  },
   testimonials: {
     sectionLabel: "",
     heading: "",
+    description: "",
+    buttonLabel: "",
+    buttonLink: "",
     backgroundImage: "",
     backgroundImageAlt: "",
     items: [],

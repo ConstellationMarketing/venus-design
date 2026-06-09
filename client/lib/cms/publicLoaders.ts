@@ -235,7 +235,6 @@ const HOME_CONTENT_KEYS: (keyof HomePageContent)[] = [
   "about",
   "practiceAreasIntro",
   "practiceAreas",
-  "awards",
   "testimonials",
   "process",
   "googleReviews",
@@ -514,11 +513,6 @@ export function mergeHomeContentWithDefaults(cmsContent: Partial<HomePageContent
       features: introFeatures,
     },
     practiceAreas: practiceAreasGrid,
-    awards: {
-      ...defaults.awards,
-      ...cmsContent.awards,
-      logos: cmsContent.awards?.logos?.length ? cmsContent.awards.logos : defaults.awards.logos,
-    },
     testimonials: {
       ...defaults.testimonials,
       ...cmsContent.testimonials,

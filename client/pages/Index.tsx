@@ -3,7 +3,6 @@ import Layout from "@site/components/layout/Layout";
 import Hero from "@site/components/home/Hero";
 import AboutSection from "@site/components/home/AboutSection";
 import PracticeAreasSection from "@site/components/home/PracticeAreasSection";
-import AwardsSection from "@site/components/home/AwardsSection";
 import TestimonialsSection from "@site/components/home/TestimonialsSection";
 import ProcessSection from "@site/components/home/ProcessSection";
 import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
@@ -47,9 +46,6 @@ export default function Index() {
         grid={content.practiceAreas}
         headingTags={content.headingTags}
       />
-
-      {/* Awards & Membership Section */}
-      <AwardsSection content={content.awards} headingTag={content.headingTags?.["awards.sectionLabel"]} />
 
       {/* Testimonials Section */}
       <TestimonialsSection content={content.testimonials} headingTag={content.headingTags?.["testimonials.sectionLabel"]} />

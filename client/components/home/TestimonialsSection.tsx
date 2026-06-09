@@ -1,12 +1,29 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { TestimonialsContent, TestimonialItem } from "@site/lib/cms/homePageTypes";
+import { useEffect, useState } from "react";
+import { ChevronDown, User } from "lucide-react";
+import type { TestimonialsContent } from "@site/lib/cms/homePageTypes";
 import RichText from "@site/components/shared/RichText";
 import DynamicHeading from "@site/components/shared/DynamicHeading";
+import SiteLink from "@site/components/layout/SiteLink";
 
 interface TestimonialsSectionProps {
   content?: TestimonialsContent;
   headingTag?: string;
+}
+
+function ButtonWithArrow({ href, label }: { href: string; label: string }) {
+  return (
+    <SiteLink
+      href={href}
+      className="group inline-flex overflow-hidden text-[18px] leading-7 text-white"
+    >
+      <span className="flex items-center bg-[#e6446d] px-8 py-3 transition-colors duration-300 group-hover:bg-[#d13963]">
+        {label}
+      </span>
+      <span className="flex items-center justify-center bg-[#d13963] px-4 py-3 transition-colors duration-300 group-hover:bg-[#bb133e]">
+        <ChevronDown className="h-5 w-5" />
+      </span>
+    </SiteLink>
+  );
 }
 
 export default function TestimonialsSection({
@@ -14,141 +31,135 @@ export default function TestimonialsSection({
   headingTag,
 }: TestimonialsSectionProps) {
   const [activeSlide, setActiveSlide] = useState(0);
+  const testimonials = content?.items ?? [];
+  const currentTestimonial = testimonials[activeSlide] ?? null;
+  const hasImage = Boolean(content?.backgroundImage);
+  const hasButton = Boolean(content?.buttonLabel?.trim() || content?.buttonLink?.trim());
+  const hasContent = Boolean(
+    content?.sectionLabel?.trim()
+      || content?.heading?.trim()
+      || content?.description?.trim()
+      || currentTestimonial
+      || hasImage,
+  );
 
-  // Guard: if no testimonial items, don't render
-  if (!content || !content.items || content.items.length === 0) {
+  useEffect(() => {
+    if (activeSlide > testimonials.length - 1) {
+      setActiveSlide(0);
+    }
+  }, [activeSlide, testimonials.length]);
+
+  useEffect(() => {
+    if (testimonials.length <= 1) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
+
+    return () => window.clearInterval(timer);
+  }, [testimonials.length]);
+
+  if (!content || !hasContent) {
     return null;
   }
 
-  const data = content;
-  const testimonials = data.items;
-
-  const nextSlide = () => {
-    setActiveSlide((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const prevSlide = () => {
-    setActiveSlide(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
-    );
-  };
-
-  const goToSlide = (index: number) => {
-    setActiveSlide(index);
-  };
-
   return (
-    <div className="bg-white py-[30px] md:py-[54px]">
-      {/* Header Section */}
-      <div className="max-w-[1080px] mx-auto w-[95%] md:w-[85%] lg:w-[80%] py-[20px] md:py-[27px]">
-        {data.sectionLabel && (
-          <div className="text-center mb-[10px]">
+    <section className="bg-white py-14 font-poppins text-black">
+      <div className="mx-auto mb-8 w-[80%] max-w-[2560px] px-4">
+        {content.sectionLabel.trim() ? (
+          <div className="mb-5 flex items-center gap-4">
+            <div className="w-8 shrink-0 text-[#333]">
+              <User className="h-6 w-6" strokeWidth={2} />
+            </div>
             <DynamicHeading
               tag={headingTag}
               defaultTag="h2"
-              className="font-outfit text-[18px] md:text-[24px] leading-tight md:leading-[36px]"
-              style={{ color: "#6b8d0c" }}
+              className="text-[18px] leading-7 text-[#333]"
             >
-              {data.sectionLabel}
+              {content.sectionLabel}
             </DynamicHeading>
           </div>
-        )}
-        {data.heading && (
-          <div className="text-center">
-            <p className="font-playfair text-[32px] md:text-[48px] lg:text-[54px] leading-tight md:leading-[54px] text-black pb-[10px]">
-              {data.heading}
+        ) : null}
+
+        {content.heading.trim() ? (
+          <div>
+            <p className="font-sawarabi text-[clamp(2.75rem,5vw,60px)] leading-[1.1] text-[#333] md:pb-2">
+              {content.heading}
             </p>
           </div>
-        )}
+        ) : null}
       </div>
 
-      {/* Content Section */}
-      <div className="max-w-[1360px] mx-auto w-[90%] md:w-[85%] lg:w-[80%] py-[27px] flex flex-col lg:flex-row gap-8 lg:gap-[3%]">
-        {/* Left Side - Image */}
-        {data.backgroundImage && (
-          <div className="lg:w-[48.5%] flex items-center justify-center">
-            <img
-              src={data.backgroundImage}
-              alt={data.backgroundImageAlt || "Testimonials"}
-              width={609}
-              height={530}
-              loading="lazy"
-              className="max-w-full"
-            />
-          </div>
-        )}
+      <div className="mx-auto w-[80%] max-w-[2560px] px-4">
+        <div className={`grid gap-6 ${hasImage ? "lg:grid-cols-[40%_30%_30%]" : "lg:grid-cols-[55%_45%]"}`}>
+          <div>
+            {content.description.trim() ? (
+              <div className="mb-8 max-w-[520px]">
+                <RichText
+                  html={content.description}
+                  className="text-[24px] leading-8 text-black [&_p]:mb-0"
+                />
+              </div>
+            ) : null}
 
-        {/* Right Side - Carousel */}
-        <div className={`${data.backgroundImage ? "lg:w-[48.5%]" : "w-full"} relative group`}>
-          {/* Carousel Container */}
-          <div className="relative min-h-[502px] overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${activeSlide * 100}%)` }}
-            >
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className="w-full flex-shrink-0 bg-white bg-[url('/images/backgrounds/quote-bg.png')] bg-no-repeat bg-[position:left_10%_top_10%] px-[6%]"
-                >
-                  <div className="flex items-center min-h-[502px]">
-                    <div className="w-full p-[30px]">
-                      <RichText
-                        html={testimonial.text}
-                        className="font-outfit text-[24px] leading-[31.2px] text-black pb-[10px] text-left"
-                      />
-                      <div className="font-outfit text-[24px] font-semibold text-black text-left">
-                        {testimonial.ratingImage && (
-                          <img
-                            src={testimonial.ratingImage}
-                            alt={testimonial.ratingImageAlt || "Rating"}
-                            width={186}
-                            height={34}
-                            loading="lazy"
-                            className="max-w-full mb-1"
-                          />
-                        )}
-                        <br />
-                        Posted By {testimonial.author}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation Buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-2 top-1/2 -translate-y-1/2 text-[rgb(95,99,104)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[100] cursor-pointer bg-white/80 hover:bg-white p-2"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="w-8 h-8" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-[rgb(95,99,104)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[100] cursor-pointer bg-white/80 hover:bg-white p-2"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="w-8 h-8" />
-          </button>
-
-          {/* Pagination Dots */}
-          <div className="absolute bottom-[20px] left-0 w-full text-center z-10">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`inline-block w-[7px] h-[7px] bg-brand-accent-dark border border-brand-accent ${
-                  index === activeSlide ? "opacity-100" : "opacity-50"
-                } ${index < testimonials.length - 1 ? "mr-[10px]" : ""} cursor-pointer transition-opacity hover:opacity-100`}
-                aria-label={`Go to testimonial ${index + 1}`}
+            {hasButton ? (
+              <ButtonWithArrow
+                href={content.buttonLink.trim() || "/about/"}
+                label={content.buttonLabel.trim() || "See what you get with Constellation"}
               />
-            ))}
+            ) : null}
+          </div>
+
+          {hasImage ? (
+            <div
+              className="min-h-[300px] bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${content.backgroundImage})` }}
+              aria-label={content.backgroundImageAlt || "Testimonial image"}
+              role="img"
+            />
+          ) : null}
+
+          <div className={`bg-[#dfdfd7] p-5 ${hasImage ? "" : "min-h-[300px]"}`}>
+            {currentTestimonial ? (
+              <div className="flex h-full flex-col justify-between gap-4">
+                <div className="relative">
+                  <span className="absolute left-0 top-0 font-sawarabi text-[28px] leading-none text-black">&quot;</span>
+                  <div className="px-4">
+                    <RichText
+                      html={currentTestimonial.text}
+                      className="font-sawarabi text-[18px] leading-[27px] text-black [&_p]:mb-0"
+                    />
+                  </div>
+                  <span className="absolute bottom-0 right-0 font-sawarabi text-[28px] leading-none text-black">&quot;</span>
+                </div>
+
+                <div>
+                  {currentTestimonial.author.trim() ? (
+                    <p className="pt-2 text-right text-[16px] font-semibold text-[#333]">
+                      {currentTestimonial.author}
+                    </p>
+                  ) : null}
+
+                  {testimonials.length > 1 ? (
+                    <div className="mt-4 flex justify-end gap-2">
+                      {testimonials.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setActiveSlide(index)}
+                          className={`h-2.5 w-2.5 rounded-full transition-opacity ${index === activeSlide ? "bg-[#195dcd] opacity-100" : "bg-[#195dcd] opacity-35"}`}
+                          aria-label={`Go to testimonial ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

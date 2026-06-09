@@ -17,7 +17,6 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
       <AboutSectionEditor content={content} update={update} />
       <PracticeAreasIntroSection content={content} update={update} />
       <PracticeAreasItemsSection content={content} update={update} />
-      <AwardsSection content={content} update={update} />
       <TestimonialsSection content={content} update={update} />
       <ProcessSection content={content} update={update} />
       <GoogleReviewsSection content={content} update={update} />
@@ -343,60 +342,6 @@ function PracticeAreasItemsSection({ content, update }: SectionProps) {
 }
 
 /* ------------------------------------------------------------------ */
-function AwardsSection({ content, update }: SectionProps) {
-  const awards = content.awards;
-  const set = (patch: Partial<typeof awards>) => update("awards", { ...awards, ...patch });
-  const ht = useHeadingTag(content, update);
-
-  return (
-    <Section title="Awards & Memberships" defaultOpen={false}>
-      <div className="grid gap-4">
-        <HeadingField
-          label="Section Heading"
-          value={awards.sectionLabel}
-          onChange={(v) => set({ sectionLabel: v })}
-          tag={ht.get("awards.sectionLabel")}
-          onTagChange={(t) => ht.set("awards.sectionLabel", t)}
-        />
-        <div>
-          <Label>Subtitle</Label>
-          <Input value={awards.heading} onChange={(e) => set({ heading: e.target.value })} />
-        </div>
-        <RichTextField label="Description" value={awards.description} onChange={(v) => set({ description: v })} />
-        <h4 className="font-medium">Award Logos</h4>
-        <ArrayEditor
-          items={awards.logos}
-          onChange={(items) => set({ logos: items })}
-          itemLabel="Logo"
-          newItem={() => ({ src: "", alt: "" })}
-          renderItem={(item, _, upd) => (
-            <div className="grid gap-3">
-              <ImageField
-                label="Logo Image"
-                value={item.src}
-                onChange={(url) => upd({ ...item, src: url })}
-                altValue={item.alt}
-                onAltChange={(alt) => upd({ ...item, alt })}
-                onSelectAsset={(asset) => upd({
-                  ...item,
-                  src: asset.url,
-                  alt: asset.suggestedAltText || item.alt,
-                })}
-                folder="awards"
-              />
-              <div>
-                <Label>Alt Text</Label>
-                <Input value={item.alt} onChange={(e) => upd({ ...item, alt: e.target.value })} />
-              </div>
-            </div>
-          )}
-        />
-      </div>
-    </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 function TestimonialsSection({ content, update }: SectionProps) {
   const t = content.testimonials;
   const set = (patch: Partial<typeof t>) => update("testimonials", { ...t, ...patch });
@@ -416,8 +361,19 @@ function TestimonialsSection({ content, update }: SectionProps) {
           <Label>Subtitle</Label>
           <Input value={t.heading} onChange={(e) => set({ heading: e.target.value })} />
         </div>
+        <RichTextField label="Description" value={t.description} onChange={(v) => set({ description: v })} />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <Label>Button Label</Label>
+            <Input value={t.buttonLabel} onChange={(e) => set({ buttonLabel: e.target.value })} placeholder="See what you get with Constellation" />
+          </div>
+          <div>
+            <Label>Button Link</Label>
+            <Input value={t.buttonLink} onChange={(e) => set({ buttonLink: e.target.value })} placeholder="/about/" />
+          </div>
+        </div>
         <ImageField
-          label="Background Image"
+          label="Testimonial Image"
           value={t.backgroundImage}
           onChange={(url) => set({ backgroundImage: url })}
           altValue={t.backgroundImageAlt || ""}
@@ -426,41 +382,24 @@ function TestimonialsSection({ content, update }: SectionProps) {
             backgroundImage: asset.url,
             backgroundImageAlt: asset.suggestedAltText || t.backgroundImageAlt || "",
           })}
-          folder="backgrounds"
+          folder="testimonials"
         />
         <div>
-          <Label>Background Image Alt Text</Label>
-          <Input value={t.backgroundImageAlt || ""} onChange={(e) => set({ backgroundImageAlt: e.target.value })} placeholder="Describe the background image" />
+          <Label>Testimonial Image Alt Text</Label>
+          <Input value={t.backgroundImageAlt || ""} onChange={(e) => set({ backgroundImageAlt: e.target.value })} placeholder="Describe the testimonial image" />
         </div>
         <ArrayEditor
           items={t.items}
           onChange={(items) => set({ items })}
           itemLabel="Testimonial"
-          newItem={() => ({ text: "", author: "", ratingImage: "", ratingImageAlt: "" })}
+          newItem={() => ({ text: "", author: "" })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-3">
               <div>
-                <Label>Author</Label>
-                <Input value={item.author} onChange={(e) => upd({ ...item, author: e.target.value })} />
+                <Label>Attribution</Label>
+                <Input value={item.author} onChange={(e) => upd({ ...item, author: e.target.value })} placeholder="MP, November 2023" />
               </div>
-              <RichTextField label="Text" value={item.text} onChange={(v) => upd({ ...item, text: v })} />
-              <ImageField
-                label="Rating Image"
-                value={item.ratingImage}
-                onChange={(url) => upd({ ...item, ratingImage: url })}
-                altValue={item.ratingImageAlt || ""}
-                onAltChange={(ratingImageAlt) => upd({ ...item, ratingImageAlt })}
-                onSelectAsset={(asset) => upd({
-                  ...item,
-                  ratingImage: asset.url,
-                  ratingImageAlt: asset.suggestedAltText || item.ratingImageAlt || "",
-                })}
-                folder="logos"
-              />
-              <div>
-                <Label>Rating Image Alt Text</Label>
-                <Input value={item.ratingImageAlt || ""} onChange={(e) => upd({ ...item, ratingImageAlt: e.target.value })} placeholder="e.g. 5 star rating" />
-              </div>
+              <RichTextField label="Quote" value={item.text} onChange={(v) => upd({ ...item, text: v })} />
             </div>
           )}
         />
