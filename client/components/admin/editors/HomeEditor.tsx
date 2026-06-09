@@ -64,9 +64,67 @@ function HeroSection({ content, update }: SectionProps) {
         <div>
           <Label>Highlighted Text</Label>
           <Input value={hero.highlightedText} onChange={(e) => set({ highlightedText: e.target.value })} />
-          <p className="text-xs text-gray-500 mt-1">Enter the exact portion of the headline to display in accent color</p>
+          <p className="text-xs text-gray-500 mt-1">Enter the exact portion of the headline to display in the highlighted block</p>
         </div>
-        <p className="text-xs text-gray-500 italic">Phone number is managed in Site Settings &gt; Contact Info</p>
+        <div>
+          <Label>Hero Description</Label>
+          <Textarea
+            value={hero.description}
+            onChange={(e) => set({ description: e.target.value })}
+            placeholder="At Constellation Law, we navigate the complexities with ease, bringing results to our clients and make them feel heard."
+          />
+        </div>
+        <ImageField
+          label="Hero Image 1"
+          value={hero.primaryImage}
+          onChange={(url) => set({ primaryImage: url })}
+          altValue={hero.primaryImageAlt}
+          onAltChange={(primaryImageAlt) => set({ primaryImageAlt })}
+          onSelectAsset={(asset) => set({
+            primaryImage: asset.url,
+            primaryImageAlt: asset.suggestedAltText || hero.primaryImageAlt,
+          })}
+          folder="hero"
+        />
+        <ImageField
+          label="Hero Image 2"
+          value={hero.secondaryImage}
+          onChange={(url) => set({ secondaryImage: url })}
+          altValue={hero.secondaryImageAlt}
+          onAltChange={(secondaryImageAlt) => set({ secondaryImageAlt })}
+          onSelectAsset={(asset) => set({
+            secondaryImage: asset.url,
+            secondaryImageAlt: asset.suggestedAltText || hero.secondaryImageAlt,
+          })}
+          folder="hero"
+        />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <Label>Primary CTA Label</Label>
+            <Input
+              value={hero.primaryCtaLabel}
+              onChange={(e) => set({ primaryCtaLabel: e.target.value })}
+              placeholder="Contact Us"
+            />
+          </div>
+          <div>
+            <Label>Primary CTA Link</Label>
+            <Input
+              value={hero.primaryCtaUrl}
+              onChange={(e) => set({ primaryCtaUrl: e.target.value })}
+              placeholder="/contact/"
+            />
+          </div>
+        </div>
+        <div>
+          <Label>Phone CTA Label</Label>
+          <Input
+            value={hero.secondaryCtaLabel}
+            onChange={(e) => set({ secondaryCtaLabel: e.target.value })}
+            placeholder="Call Us Now"
+          />
+        </div>
+        <p className="text-xs text-gray-500 italic">The phone CTA uses the number from Site Settings &gt; Contact Info.</p>
       </div>
     </Section>
   );

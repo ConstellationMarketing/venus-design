@@ -1,49 +1,147 @@
-import { Phone } from "lucide-react";
+import type { HeroContent } from "@site/lib/cms/homePageTypes";
 import { useGlobalPhone } from "@site/contexts/SiteSettingsContext";
+import { ChevronDown } from "lucide-react";
+import SiteLink from "../layout/SiteLink";
 
-export default function Hero() {
-  const { phoneDisplay, phoneLabel, phoneNumber } = useGlobalPhone();
+interface HeroProps {
+  content: HeroContent;
+}
+
+function buildPhoneHref(phoneNumber: string, phoneDisplay: string) {
+  const source = phoneNumber.trim() || phoneDisplay.trim();
+  const digits = source.replace(/[^\d+]/g, "");
+  return digits ? `tel:${digits}` : "";
+}
+
+function getDisplayHeadlineLines(headline: string, highlightedText: string) {
+  const source = headline.trim();
+  const highlight = highlightedText.trim();
+
+  if (!source) {
+    return [];
+  }
+
+  let remaining = source;
+
+  if (highlight) {
+    const sourceLower = source.toLowerCase();
+    const highlightLower = highlight.toLowerCase();
+    const index = sourceLower.indexOf(highlightLower);
+
+    if (index >= 0) {
+      remaining = `${source.slice(0, index)} ${source.slice(index + highlight.length)}`;
+    }
+  }
+
+  const lines = remaining
+    .split(/\n|,/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (lines.length > 0) {
+    return lines;
+  }
+
+  return highlight ? [] : [source];
+}
+
+export default function Hero({ content }: HeroProps) {
+  const { phoneDisplay, phoneNumber } = useGlobalPhone();
+  const phoneHref = buildPhoneHref(phoneNumber, phoneDisplay);
+  const headlineLines = getDisplayHeadlineLines(content.headline, content.highlightedText);
+  const primaryCtaLabel = content.primaryCtaLabel.trim() || "Contact Us";
+  const primaryCtaUrl = content.primaryCtaUrl.trim() || "/contact/";
+  const secondaryCtaLabel = content.secondaryCtaLabel.trim() || "Call Us Now";
+  const hasAnyImage = Boolean(content.primaryImage || content.secondaryImage);
 
   return (
-    <div className="max-w-[2560px] mx-auto w-[95%] py-[27px] my-[40px]">
-      <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-[3%]">
-        {/* Headline Section */}
-        <div className="lg:w-[65.667%]">
-          <div className="mb-[40px]">
-            <div className="relative">
-              <p className="font-playfair text-[clamp(2rem,5vw,68.8px)] font-light leading-[1.2] text-white text-left">
-                {phoneLabel}
-              </p>
+    <section className="bg-white pb-8 font-poppins text-black">
+      <div className="mx-auto w-[90%] max-w-[2560px] px-4">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <h1 className="sr-only">{content.h1Title.trim() || content.headline.trim() || content.highlightedText.trim()}</h1>
+
+            {headlineLines.length > 0 ? (
+              <div className="mb-4">
+                <p className="font-sawarabi text-[clamp(3rem,7vw,74px)] leading-[1.1] text-black">
+                  {headlineLines.map((line, index) => (
+                    <span key={`${line}-${index}`} className="block">
+                      {line}{index < headlineLines.length - 1 ? "," : ""}
+                    </span>
+                  ))}
+                </p>
+              </div>
+            ) : null}
+
+            {content.highlightedText.trim() ? (
+              <div className="mb-12">
+                <p className="inline-block bg-[#b0d9e1] px-2 font-playfair text-[clamp(3rem,7vw,74px)] italic leading-[1.1] text-black">
+                  {content.highlightedText}
+                </p>
+              </div>
+            ) : null}
+
+            {content.description.trim() ? (
+              <div className="mb-12 max-w-[720px]">
+                <p className="text-[20px] leading-8 text-black md:text-[24px] md:leading-8">
+                  {content.description}
+                </p>
+              </div>
+            ) : null}
+
+            <div className="flex flex-wrap gap-4">
+              <SiteLink
+                href={primaryCtaUrl}
+                className="group inline-flex overflow-hidden text-[18px] leading-7 text-white"
+              >
+                <span className="flex items-center bg-[#e6446d] px-8 py-3 transition-colors duration-300 group-hover:bg-[#d13963]">
+                  {primaryCtaLabel}
+                </span>
+                <span className="flex items-center justify-center bg-[#d13963] px-4 py-3 transition-colors duration-300 group-hover:bg-[#bb133e]">
+                  <ChevronDown className="h-5 w-5" />
+                </span>
+              </SiteLink>
+
+              {phoneHref ? (
+                <a
+                  href={phoneHref}
+                  className="group inline-flex overflow-hidden text-[18px] leading-7 text-white"
+                >
+                  <span className="flex items-center bg-[#195dcd] px-8 py-3 transition-colors duration-300 group-hover:bg-[#0b4ab0]">
+                    {secondaryCtaLabel}
+                  </span>
+                  <span className="flex items-center justify-center bg-[#002664] px-4 py-3 transition-colors duration-300 group-hover:bg-[#001d4d]">
+                    <ChevronDown className="h-5 w-5" />
+                  </span>
+                </a>
+              ) : null}
             </div>
           </div>
 
-          {/* Call Box */}
-          <a
-            href={`tel:${phoneNumber.replace(/\D/g, "")}`}
-            className="bg-brand-accent p-[8px] w-full max-w-[400px] cursor-pointer transition-all duration-300 hover:bg-brand-accent-dark group block"
-          >
-            <div className="flex items-start gap-4">
-              <div className="bg-white p-[15px] mt-1 flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                <Phone
-                  className="w-8 h-8 [&>*]:fill-none [&>*]:stroke-black group-hover:[&>*]:stroke-white transition-colors duration-300"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <div className="flex-1">
-                <p className="font-outfit text-[18px] leading-[18px] text-black pb-[10px] font-normal group-hover:text-white transition-colors duration-300">
-                  {phoneLabel}
-                </p>
-                <p className="font-outfit text-[clamp(1.5rem,4vw,40px)] text-black leading-tight group-hover:text-white transition-colors duration-300">
-                  {phoneDisplay}
-                </p>
+          {hasAnyImage ? (
+            <div className="flex justify-center lg:justify-end">
+              <div className="grid w-full max-w-[660px] gap-6">
+                {content.primaryImage ? (
+                  <img
+                    src={content.primaryImage}
+                    alt={content.primaryImageAlt || content.h1Title || "Homepage hero image"}
+                    className="w-full max-w-full object-cover align-middle"
+                    loading="eager"
+                  />
+                ) : null}
+                {content.secondaryImage ? (
+                  <img
+                    src={content.secondaryImage}
+                    alt={content.secondaryImageAlt || content.h1Title || "Homepage hero image"}
+                    className="w-full max-w-full object-cover align-middle"
+                    loading="eager"
+                  />
+                ) : null}
               </div>
             </div>
-          </a>
+          ) : null}
         </div>
-
-        {/* Spacer for form (will be added separately) */}
-        <div className="lg:w-[31.3333%]"></div>
       </div>
-    </div>
+    </section>
   );
 }

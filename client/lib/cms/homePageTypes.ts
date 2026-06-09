@@ -2,9 +2,17 @@
 // Each section maps directly to a static component's data needs
 
 export interface HeroContent {
-  h1Title: string; // H1 title text (all caps, ~20px) between headline and phone button
+  h1Title: string;
   headline: string;
   highlightedText: string;
+  description: string;
+  primaryImage: string;
+  primaryImageAlt: string;
+  secondaryImage: string;
+  secondaryImageAlt: string;
+  primaryCtaLabel: string;
+  primaryCtaUrl: string;
+  secondaryCtaLabel: string;
   phone: string;
   phoneLabel: string;
 }
@@ -155,6 +163,14 @@ export const defaultHomeContent: HomePageContent = {
     h1Title: "",
     headline: "",
     highlightedText: "",
+    description: "",
+    primaryImage: "",
+    primaryImageAlt: "",
+    secondaryImage: "",
+    secondaryImageAlt: "",
+    primaryCtaLabel: "Contact Us",
+    primaryCtaUrl: "/contact/",
+    secondaryCtaLabel: "Call Us Now",
     phone: "",
     phoneLabel: "",
   },
