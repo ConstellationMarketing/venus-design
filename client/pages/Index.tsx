@@ -5,7 +5,7 @@ import AboutSection from "@site/components/home/AboutSection";
 import PracticeAreasSection from "@site/components/home/PracticeAreasSection";
 import TestimonialsSection from "@site/components/home/TestimonialsSection";
 import HomeBlogSection from "@site/components/home/HomeBlogSection";
-import GoogleReviewsSection from "@site/components/home/GoogleReviewsSection";
+import ResultsSection from "@site/components/home/ResultsSection";
 import FaqSection from "@site/components/home/FaqSection";
 import ContactUsSection from "@site/components/home/ContactUsSection";
 import { useHomeContent } from "@site/hooks/useHomeContent";
@@ -53,8 +53,8 @@ export default function Index() {
       {/* Blog Section */}
       <HomeBlogSection content={content.blog} headingTag={content.headingTags?.["blog.heading"]} />
 
-      {/* Google Reviews Section */}
-      <GoogleReviewsSection content={content.googleReviews} headingTag={content.headingTags?.["googleReviews.sectionLabel"]} />
+      {/* Results Section */}
+      <ResultsSection content={content.results} />
 
       {/* FAQ Section */}
       <FaqSection content={content.faq} />

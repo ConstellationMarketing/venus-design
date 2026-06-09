@@ -19,7 +19,7 @@ export default function HomeEditor({ content, onChange }: HomeEditorProps) {
       <PracticeAreasItemsSection content={content} update={update} />
       <TestimonialsSection content={content} update={update} />
       <BlogSectionEditor content={content} update={update} />
-      <GoogleReviewsSection content={content} update={update} />
+      <ResultsSectionEditor content={content} update={update} />
       <FaqSectionEditor content={content} update={update} />
       <ContactSectionEditor content={content} update={update} />
     </div>
@@ -440,54 +440,33 @@ function BlogSectionEditor({ content, update }: SectionProps) {
 }
 
 /* ------------------------------------------------------------------ */
-function GoogleReviewsSection({ content, update }: SectionProps) {
-  const r = content.googleReviews;
-  const set = (patch: Partial<typeof r>) => update("googleReviews", { ...r, ...patch });
-  const ht = useHeadingTag(content, update);
+function ResultsSectionEditor({ content, update }: SectionProps) {
+  const results = content.results;
+  const set = (patch: Partial<typeof results>) => update("results", { ...results, ...patch });
 
   return (
-    <Section title="Google Reviews" defaultOpen={false}>
+    <Section title="Results Section" defaultOpen={false}>
       <div className="grid gap-4">
-        <HeadingField
-          label="Section Heading"
-          value={r.sectionLabel}
-          onChange={(v) => set({ sectionLabel: v })}
-          tag={ht.get("googleReviews.sectionLabel")}
-          onTagChange={(t) => ht.set("googleReviews.sectionLabel", t)}
-        />
-        <div>
-          <Label>Subtitle</Label>
-          <Input value={r.heading} onChange={(e) => set({ heading: e.target.value })} />
-        </div>
-        <RichTextField label="Description" value={r.description} onChange={(v) => set({ description: v })} />
         <ArrayEditor
-          items={r.reviews}
-          onChange={(items) => set({ reviews: items })}
-          itemLabel="Review"
-          newItem={() => ({ text: "", author: "", ratingImage: "", ratingImageAlt: "" })}
+          items={results.items}
+          onChange={(items) => set({ items })}
+          itemLabel="Result"
+          newItem={() => ({ image: "", title: "", description: "" })}
           renderItem={(item, _, upd) => (
             <div className="grid gap-3">
-              <div>
-                <Label>Author</Label>
-                <Input value={item.author} onChange={(e) => upd({ ...item, author: e.target.value })} />
-              </div>
-              <RichTextField label="Review Text" value={item.text} onChange={(v) => upd({ ...item, text: v })} />
               <ImageField
-                label="Rating Image"
-                value={item.ratingImage}
-                onChange={(url) => upd({ ...item, ratingImage: url })}
-                altValue={item.ratingImageAlt || ""}
-                onAltChange={(ratingImageAlt) => upd({ ...item, ratingImageAlt })}
-                onSelectAsset={(asset) => upd({
-                  ...item,
-                  ratingImage: asset.url,
-                  ratingImageAlt: asset.suggestedAltText || item.ratingImageAlt || "",
-                })}
-                folder="logos"
+                label="Result Image"
+                value={item.image}
+                onChange={(url) => upd({ ...item, image: url })}
+                folder="results"
               />
               <div>
-                <Label>Rating Image Alt Text</Label>
-                <Input value={item.ratingImageAlt || ""} onChange={(e) => upd({ ...item, ratingImageAlt: e.target.value })} placeholder="e.g. 5 star rating" />
+                <Label>Result Title</Label>
+                <Input value={item.title} onChange={(e) => upd({ ...item, title: e.target.value })} placeholder="99.7%" />
+              </div>
+              <div>
+                <Label>Result Description</Label>
+                <Input value={item.description} onChange={(e) => upd({ ...item, description: e.target.value })} placeholder="Success Rate" />
               </div>
             </div>
           )}

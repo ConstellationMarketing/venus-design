@@ -109,18 +109,14 @@ export interface HomeBlogContent {
   buttonLink: string;
 }
 
-export interface GoogleReviewItem {
-  text: string;
-  author: string;
-  ratingImage: string;
-  ratingImageAlt?: string;
+export interface ResultItem {
+  image: string;
+  title: string;
+  description: string;
 }
 
-export interface GoogleReviewsContent {
-  sectionLabel: string;
-  heading: string;
-  description: string;
-  reviews: GoogleReviewItem[];
+export interface ResultsContent {
+  items: ResultItem[];
 }
 
 export interface FaqItem {
@@ -160,7 +156,7 @@ export interface HomePageContent {
   practiceAreas: PracticeAreasGridContent;
   testimonials: TestimonialsContent;
   blog: HomeBlogContent;
-  googleReviews: GoogleReviewsContent;
+  results: ResultsContent;
   faq: FaqContent;
   contact: ContactContent;
   /** Maps heading keys (e.g. "about.heading") to HTML tag names (e.g. "h2") */
@@ -223,11 +219,8 @@ export const defaultHomeContent: HomePageContent = {
     buttonLabel: "Read All",
     buttonLink: "/blog/",
   },
-  googleReviews: {
-    sectionLabel: "",
-    heading: "",
-    description: "",
-    reviews: [],
+  results: {
+    items: [],
   },
   faq: {
     heading: "",
