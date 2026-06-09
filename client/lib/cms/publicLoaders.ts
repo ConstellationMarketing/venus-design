@@ -36,10 +36,8 @@ export interface SiteSettings {
     openInNewTab?: boolean;
     children?: { label: string; href: string; openInNewTab?: boolean }[];
   }[];
-  footerAboutLinks: { label: string; href?: string }[];
-  footerPracticeLinks: { label: string; href?: string }[];
-  footerResourcesHeading: string;
-  footerPracticeAreasHeading: string;
+  footerPrimaryImageUrl: string;
+  footerSecondaryImageUrl: string;
   footerTaglineHtml: string;
   addressLine1: string;
   addressLine2: string;
@@ -156,8 +154,8 @@ interface SiteSettingsRow {
   header_cta_text?: string | null;
   header_cta_url?: string | null;
   navigation_items?: SiteSettings["navigationItems"] | null;
-  footer_about_links?: SiteSettings["footerAboutLinks"] | null;
-  footer_practice_links?: SiteSettings["footerPracticeLinks"] | null;
+  footer_about_links?: { label: string; href?: string }[] | null;
+  footer_practice_links?: { label: string; href?: string }[] | null;
   footer_resources_heading?: string | null;
   footer_practice_areas_heading?: string | null;
   footer_tagline_html?: string | null;
@@ -194,10 +192,8 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   headerCtaText: "",
   headerCtaUrl: "",
   navigationItems: [],
-  footerAboutLinks: [],
-  footerPracticeLinks: [],
-  footerResourcesHeading: "",
-  footerPracticeAreasHeading: "",
+  footerPrimaryImageUrl: "",
+  footerSecondaryImageUrl: "",
   footerTaglineHtml: "",
   addressLine1: "",
   addressLine2: "",
@@ -428,10 +424,8 @@ export function shapeSiteSettings(row?: SiteSettingsRow | null): SiteSettings {
     headerCtaText: row.header_cta_text || DEFAULT_SITE_SETTINGS.headerCtaText,
     headerCtaUrl: row.header_cta_url || DEFAULT_SITE_SETTINGS.headerCtaUrl,
     navigationItems: row.navigation_items?.length ? row.navigation_items : DEFAULT_SITE_SETTINGS.navigationItems,
-    footerAboutLinks: row.footer_about_links?.length ? row.footer_about_links : DEFAULT_SITE_SETTINGS.footerAboutLinks,
-    footerPracticeLinks: row.footer_practice_links?.length ? row.footer_practice_links : DEFAULT_SITE_SETTINGS.footerPracticeLinks,
-    footerResourcesHeading: row.footer_resources_heading || DEFAULT_SITE_SETTINGS.footerResourcesHeading,
-    footerPracticeAreasHeading: row.footer_practice_areas_heading || DEFAULT_SITE_SETTINGS.footerPracticeAreasHeading,
+    footerPrimaryImageUrl: row.footer_resources_heading || DEFAULT_SITE_SETTINGS.footerPrimaryImageUrl,
+    footerSecondaryImageUrl: row.footer_practice_areas_heading || DEFAULT_SITE_SETTINGS.footerSecondaryImageUrl,
     footerTaglineHtml: row.footer_tagline_html || DEFAULT_SITE_SETTINGS.footerTaglineHtml,
     addressLine1: row.address_line1 || DEFAULT_SITE_SETTINGS.addressLine1,
     addressLine2: row.address_line2 || DEFAULT_SITE_SETTINGS.addressLine2,
