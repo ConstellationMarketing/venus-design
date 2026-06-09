@@ -31,7 +31,7 @@ export default function Header() {
   );
 
   return (
-    <header className="relative z-50 bg-white py-6 font-poppins text-black">
+    <header className="sticky top-0 z-50 bg-white py-4 font-poppins text-black">
       <div className="mx-auto w-[98%] max-w-[2560px] px-4">
         <div className="flex items-center justify-between gap-6">
           <div className="flex min-w-0 flex-1 items-center gap-8 lg:mr-8">
@@ -41,7 +41,7 @@ export default function Header() {
                   <img
                     src={logoUrl}
                     alt={logoAlt}
-                    className="max-h-[45px] w-auto max-w-full align-middle"
+                    className="max-h-[40px] w-auto max-w-full align-middle"
                   />
                 ) : (
                   <span className="text-[24px] font-medium leading-none text-black">
@@ -65,7 +65,7 @@ export default function Header() {
                           href={item.href}
                           target={item.openInNewTab ? "_blank" : undefined}
                           rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-                          className="inline-block py-8 text-[18px] leading-7 text-black transition-colors duration-150 hover:text-[#bb133e]"
+                          className="inline-block py-5 text-[18px] leading-7 text-black transition-colors duration-150 hover:text-[#bb133e]"
                         >
                           {item.label}
                         </SiteLink>
@@ -120,7 +120,7 @@ export default function Header() {
             <div className="hidden shrink-0 text-center lg:block">
               <a
                 href={phoneHref}
-                className="font-sawarabi text-[28px] leading-[42px] text-[#bb133e] transition-colors duration-150 hover:text-[#8f0f31]"
+                className="font-sawarabi text-[24px] leading-[36px] text-[#bb133e] transition-colors duration-150 hover:text-[#8f0f31]"
               >
                 {phoneDisplay}
               </a>

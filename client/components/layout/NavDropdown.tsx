@@ -52,7 +52,7 @@ export default function NavDropdown({ item }: NavDropdownProps) {
         href={item.href}
         target={item.openInNewTab ? "_blank" : undefined}
         rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-        className="inline-flex items-center gap-1 py-8 text-[18px] leading-7 text-black transition-colors duration-150 hover:text-[#bb133e]"
+        className="inline-flex items-center gap-1 py-5 text-[18px] leading-7 text-black transition-colors duration-150 hover:text-[#bb133e]"
       >
         {item.label}
         <ChevronDown
