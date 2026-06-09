@@ -37,3 +37,6 @@ tools/qa/urls.json
 # Override global gitignore vendor/ rules — this project tracks vendor/cms-core
 !vendor/
 !vendor/**
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
