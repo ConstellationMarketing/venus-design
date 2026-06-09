@@ -15,6 +15,9 @@ import {
   Bike,
   Footprints,
   AlertTriangle,
+  Plane,
+  Diamond,
+  User,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react";
@@ -42,6 +45,9 @@ const iconMap: Record<string, LucideIcon> = {
   Shield,
   TrendingUp,
   Stethoscope,
+  Plane,
+  Diamond,
+  User,
 };
 
 interface PracticeAreasSectionProps {
@@ -52,11 +58,14 @@ interface PracticeAreasSectionProps {
 
 function ButtonWithArrow({ href, label }: { href: string; label: string }) {
   return (
-    <SiteLink href={href} className="group inline-flex overflow-hidden text-[18px] leading-7 text-white">
-      <span className="flex items-center bg-[#e6446d] px-8 py-3 transition-colors duration-300 group-hover:bg-[#d13963]">
+    <SiteLink
+      href={href}
+      className="group inline-flex overflow-hidden text-[18px] leading-7 text-white"
+    >
+      <span className="flex items-center bg-[#bb133e] px-8 py-3 transition-colors duration-300 group-hover:bg-[#a51037]">
         {label}
       </span>
-      <span className="flex items-center justify-center bg-[#d13963] px-4 py-3 transition-colors duration-300 group-hover:bg-[#bb133e]">
+      <span className="flex items-center justify-center bg-[#8f0f28] px-4 py-3 transition-colors duration-300 group-hover:bg-[#7b0d22]">
         <ChevronDown className="h-5 w-5" />
       </span>
     </SiteLink>
@@ -70,74 +79,32 @@ export default function PracticeAreasSection({
 }: PracticeAreasSectionProps) {
   const featureItems = intro?.features ?? [];
   const areaItems = grid?.items ?? [];
-  const showIntro = Boolean(intro && (intro.sectionLabel || intro.heading || featureItems.some((item) => item.title || item.image)));
-  const showGrid = areaItems.length > 0;
+  const headingText = intro?.sectionLabel?.trim() || intro?.heading?.trim() || "";
+  const showLeftPanel = Boolean(headingText || areaItems.length > 0);
+  const showRightPanel = featureItems.some((item) => item.title || item.image);
 
-  if (!showIntro && !showGrid) {
+  if (!showLeftPanel && !showRightPanel) {
     return null;
   }
 
   return (
-    <section className="bg-white py-12 md:py-16">
+    <section className="bg-white font-poppins text-[#333]">
       <div className="mx-auto w-[90%] max-w-[2560px] px-4">
-        {showIntro ? (
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start">
-            <div>
-              {intro?.sectionLabel ? (
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="bg-[#f9d0de] px-10 py-10">
+            {headingText ? (
+              <div className="mb-16 mt-5">
                 <DynamicHeading
                   tag={headingTags?.["practiceAreasIntro.sectionLabel"]}
-                  defaultTag="h2"
-                  className="mb-3 text-[18px] leading-tight text-[#bb133e] md:text-[24px] md:leading-[36px]"
+                  defaultTag="h3"
+                  className="font-sawarabi text-[32px] leading-10 text-[#333]"
                 >
-                  {intro.sectionLabel}
+                  {headingText}
                 </DynamicHeading>
-              ) : null}
-              {intro?.heading ? (
-                <h2 className="font-sawarabi text-[clamp(2.5rem,5vw,60px)] leading-[1.08] text-black">
-                  {intro.heading.split(/\n/).map((line, index) => (
-                    <span key={`${line}-${index}`} className="block">
-                      {line}
-                    </span>
-                  ))}
-                </h2>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {featureItems.map((feature, index) => {
-                const featureTag = headingTags?.[`practiceAreasIntro.features.${index}.title`] ?? "h3";
-
-                return (
-                  <div key={index} className="overflow-hidden border border-black/10 bg-white">
-                    {feature.image ? (
-                      <img
-                        src={feature.image}
-                        alt={feature.imageAlt || feature.title || "Practice area feature"}
-                        className="h-[180px] w-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="h-[180px] w-full bg-black/5" />
-                    )}
-                    <div className="p-5">
-                      <DynamicHeading
-                        tag={featureTag}
-                        defaultTag="h3"
-                        className="font-playfair text-[24px] leading-tight text-black"
-                      >
-                        {feature.title}
-                      </DynamicHeading>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-
-        {showGrid ? (
-          <div className={showIntro ? "mt-12 md:mt-16" : ""}>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div>
               {areaItems.map((area, index) => {
                 const Icon = iconMap[area.icon] || Scale;
 
@@ -145,30 +112,69 @@ export default function PracticeAreasSection({
                   <SiteLink
                     key={index}
                     href={area.link}
-                    className="group flex min-h-[220px] flex-col justify-between border border-black/10 bg-[#f7f7f7] p-6 transition-colors duration-300 hover:border-[#bb133e] hover:bg-white"
+                    className={`flex items-start border-b border-black pb-3 text-[#333] transition-opacity duration-300 hover:opacity-75 ${index > 0 ? "mt-8" : ""}`}
                   >
-                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#aecdff] text-black transition-colors duration-300 group-hover:bg-[#bb133e] group-hover:text-white">
-                      <Icon className="h-7 w-7" strokeWidth={1.8} />
+                    <div className="w-8 shrink-0">
+                      <Icon className="h-6 w-6" strokeWidth={2} />
                     </div>
-                    <h3 className="font-playfair text-[28px] leading-tight text-black transition-colors duration-300 group-hover:text-[#bb133e]">
-                      {area.title}
-                    </h3>
+                    <div className="ml-4">
+                      <h4 className="text-[18px] leading-7 text-[#333]">
+                        {area.title}
+                      </h4>
+                    </div>
                   </SiteLink>
                 );
               })}
             </div>
-
-            {(grid?.ctaLabel || grid?.ctaLink) ? (
-              <div className="mt-10 flex justify-center">
-                <ButtonWithArrow
-                  href={grid?.ctaLink || "/practice-areas/"}
-                  label={grid?.ctaLabel || "View All Practice Areas"}
-                />
-              </div>
-            ) : null}
           </div>
-        ) : null}
+
+          <div className="px-12 py-16 md:px-12 md:py-16">
+            <div className="grid gap-8 sm:grid-cols-2">
+              {featureItems.map((feature, index) => {
+                const featureTag = headingTags?.[`practiceAreasIntro.features.${index}.title`] ?? "h3";
+
+                return (
+                  <div key={index} className="text-left">
+                    <div className="mb-8 inline-block text-left">
+                      {feature.image ? (
+                        <img
+                          src={feature.image}
+                          alt={feature.imageAlt || feature.title || "Practice area feature"}
+                          className="h-[70px] w-auto max-w-full align-middle"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="h-[70px] w-[61px] bg-black/5" />
+                      )}
+                    </div>
+                    <DynamicHeading
+                      tag={featureTag}
+                      defaultTag="h3"
+                      className="font-sawarabi text-[36px] leading-10 text-[#333]"
+                    >
+                      {feature.title}
+                    </DynamicHeading>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
+
+      {(grid?.ctaLabel || grid?.ctaLink) ? (
+        <div className="mx-auto w-[90%] max-w-[2560px] px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="bg-[#bb133e] px-6 py-6">
+              <ButtonWithArrow
+                href={grid?.ctaLink || "/practice-areas/"}
+                label={grid?.ctaLabel || "See all services"}
+              />
+            </div>
+            <div />
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
